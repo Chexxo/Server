@@ -1,22 +1,30 @@
-const certificateProvider = require("./CertificateProvider.js").CertificateProvider;
+const chexxoServer = require("./ChexxoServer.js").ChexxoServer;
 
 //const prov = new certificateProvider();
 //const cert = async prov.getCertificate("google.com");
 
 //var certificateProvider = require("./CertificateProvider");
 
-/*exports.handler = async (event: any) => {
-    // TODO implement
-    const prov = new certificateProvider();
-    const cert = await prov.getCertificate("google.com")
-    const response = {
-        statusCode: 200,
-        body: JSON.stringify('Hello from Lambda!'+cert),
+/*
+class AWSEvent {
+  url: string;
+}
+exports.handler = async (event: AWSEvent) => {
+  const prov = new certificateProvider();
+  let response = {};
+  try {
+    const cert = await prov.getCertificate(event.url);
+    response = {
+      statusCode: 200,
+      body: JSON.stringify(cert),
     };
-    return response;
-};*/
+  } catch (error: any) {
+    //TODO Do Something
+  }
+  return response;
+};
 
-async function duper() {
+async function duper(): Promise<void> {
   const prov = new certificateProvider();
   const cert = await prov.getCertificate("google.com")
   console.log("Hello");
@@ -24,3 +32,7 @@ async function duper() {
 }
 
 duper();
+*/
+
+var server = new chexxoServer();
+server.certificateCallback("www.google.com");

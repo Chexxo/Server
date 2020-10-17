@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/Chexxo/Server/issues"
   },
-  "homepage": "https://github.com/Vec7or/certSecCheck#readme",
+  "homepage": "https://github.com/Chexxo/Server",
   "devDependencies": {
     "@types/jest": "^26.0.10",
     "@typescript-eslint/eslint-plugin": "^3.10.1",
@@ -32,11 +32,6 @@
     "ts-loader": "^8.0.3",
     "typedoc": "^0.18.0",
     "typescript": "^4.0.2",
-    "typescript-eslint": "0.0.1-alpha.0",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
-  },
-  "dependencies": {
-    "ocsp": "^1.2.0"
+    "typescript-eslint": "0.0.1-alpha.0"
   }
 }
