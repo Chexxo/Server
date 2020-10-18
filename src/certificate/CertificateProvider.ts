@@ -1,25 +1,27 @@
-const https = require("https");
+import * as https from "https";
 
 class HTTPSOptions {
-  host: string;
-  port: number;
-  method: string;
+  public host: string;
+  public port: number;
+  public method: string;
 }
 
-class CertificateProvider {
+export class CertificateProvider {
   options: HTTPSOptions;
 
-  constructor() {
+  public constructor() {
     this.options = {
       host: "",
       port: 443,
       method: "GET",
     };
+    this.getCertificate = this.getCertificate.bind(this);
   }
 
-  async getCertificate(url: string): Promise<object> {
+  public async getCertificate(url: string): Promise<object> {
     // Implement error handling like revocation etc.
     this.options.host = url;
+    console.log("Provider:" + this.options.host);
     return new Promise((resolve, reject) => {
       const req = https.request(this.options, function (res: any) {
         res.on("error", reject);
@@ -37,5 +39,3 @@ class CertificateProvider {
     });
   }
 }
-
-module.exports.CertificateProvider = CertificateProvider;
