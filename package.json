@@ -4,10 +4,12 @@
   "description": "The server component for the chexxo certificate quality identification plugin.",
   "main": "index.js",
   "scripts": {
-    "make:pretty": "npx prettier --write ./src/",
-    "lint": "npx eslint ./src/ --max-warnings 0",
-    "test": "npx jest ./tests --coverage true",
-    "build": "./node_modules/.bin/tsc"
+    "format": "npx prettier --write ./src/",
+    "lint:eslint": "npx eslint ./src/ --max-warnings 0",
+    "test": "npx jest --coverage true",
+    "test:watch": "npx jest --watch",
+    "build:prod": "./node_modules/.bin/tsc",
+    "build:documentation": "npx typedoc --options ./typedoc.config.js"
   },
   "repository": {
     "type": "git",
@@ -32,6 +34,7 @@
     "ts-jest": "^26.3.0",
     "ts-loader": "^8.0.3",
     "typedoc": "^0.18.0",
+    "typedoc-plugin-no-inherit": "^1.2.0",
     "typescript": "^4.0.2",
     "typescript-eslint": "0.0.1-alpha.0"
   },

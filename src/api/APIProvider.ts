@@ -1,3 +1,3 @@
-interface APIPRovider {
+interface APIProvider {
   init(callback: (url: string) => object): void;
 }

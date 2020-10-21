@@ -1,3 +1,4 @@
+import { ExpressAPIProvider } from "./api/ExpressAPIProvider.js";
 import { CertificateProvider } from "./certificate/CertificateProvider.js";
 import { ChexxoServer } from "./ChexxoServer.js";
 
@@ -35,7 +36,7 @@ async function duper(): Promise<void> {
 duper();
 */
 
-var server = new ChexxoServer();
+var server = new ChexxoServer(new CertificateProvider(), new ExpressAPIProvider());
 /*const prov = new CertificateProvider();
 prov.getCertificate('www.google.com').then((cert) => {
   console.log("Yay");

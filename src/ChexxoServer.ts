@@ -3,11 +3,11 @@ import { ExpressAPIProvider } from "./api/ExpressAPIProvider.js";
 
 export class ChexxoServer {
   private certificateProvider: CertificateProvider;
-  private apiProvider: APIPRovider;
+  private apiProvider: APIProvider;
 
-  public constructor() {
-    this.certificateProvider = new CertificateProvider();
-    this.apiProvider = new ExpressAPIProvider();
+  public constructor(certificateProvider: CertificateProvider, apiProvider: APIProvider) {
+    this.certificateProvider = certificateProvider;
+    this.apiProvider = apiProvider;
     this.certificateCallback = this.certificateCallback.bind(this);
     this.apiProvider.init(this.certificateCallback);
   }

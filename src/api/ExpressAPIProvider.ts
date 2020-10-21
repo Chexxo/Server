@@ -1,6 +1,6 @@
 import * as express from "express";
 
-export class ExpressAPIProvider implements APIPRovider {
+export class ExpressAPIProvider implements APIProvider {
   private app: express.Application;
   private callback: (url: string) => object;
 
