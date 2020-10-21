@@ -18,12 +18,12 @@ jobs:
       
       - name: Install dependencies
         run: npm i
-  
-      - name: Run lint
-        run: npm run lint:eslint
-        
+
       - name: Run format
         run: npm run format
+
+      - name: Run lint
+        run: npm run lint:eslint
       
       - name: Run tests
         run: npm run test
@@ -44,6 +44,6 @@ jobs:
       - name: Upload documentation
         uses: actions/upload-artifact@v2.2.0
         with:
-          name: Code
+          name: Documentation
           path: docs/*
           if-no-files-found: error
