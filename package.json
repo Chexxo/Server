@@ -8,7 +8,7 @@
     "lint:eslint": "npx eslint ./src/ --max-warnings 0",
     "test": "npx jest --coverage true",
     "test:watch": "npx jest --watch",
-    "build:prod": "./node_modules/.bin/tsc",
+    "build:prod": "./node_modules/.bin/tsc -p ./tsconfig.prod.json",
     "build:documentation": "npx typedoc --options ./typedoc.config.js"
   },
   "repository": {
