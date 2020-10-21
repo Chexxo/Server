@@ -15,7 +15,6 @@ module.exports = {
       "jest",
     ],
     env: {
-      browser: true,
       es6: true,
       jest: true,
     },
@@ -37,4 +36,3 @@ module.exports = {
       },
     },
   };
-  

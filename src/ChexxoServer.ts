@@ -10,16 +10,16 @@ export class ChexxoServer {
   ) {
     this.certificateProvider = certificateProvider;
     this.apiProvider = apiProvider;
-    this.certificateCallback = this.certificateCallback.bind(this);
+    this.fetchCertificateByUrl = this.fetchCertificateByUrl.bind(this);
   }
 
   public init(): void {
-    this.apiProvider.init(this.certificateCallback);
+    this.apiProvider.init(this.fetchCertificateByUrl);
   }
 
-  public async certificateCallback(
+  public async fetchCertificateByUrl(
     url: string
   ): Promise<Record<string, unknown>> {
-    return this.certificateProvider.getCertificate(url);
+    return this.certificateProvider.fetchCertificateByUrl(url);
   }
 }
