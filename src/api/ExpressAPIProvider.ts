@@ -1,8 +1,10 @@
 import * as express from "express";
+import { Server } from "http";
 
 export class ExpressAPIProvider implements APIProvider {
   private app: express.Application;
   private callback: (url: string) => object;
+  private server: Server;
 
   public constructor() {
     this.app = express();
@@ -26,8 +28,12 @@ export class ExpressAPIProvider implements APIProvider {
   }
 
   private startAPI(): void {
-    this.app.listen(3000, () => {
+    this.server = this.app.listen(3000, () => {
       console.log("Server running on port 3000");
     });
+  }
+
+  public close(): void{
+    this.server.close();
   }
 }

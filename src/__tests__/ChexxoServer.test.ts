@@ -1,8 +1,10 @@
-import { ExpressAPIProvider } from "../api/ExpressAPIProvider.js";
-import { CertificateProvider } from "../certificate/CertificateProvider.js";
-import {ChexxoServer} from "../ChexxoServer.js";
+import { ExpressAPIProvider } from "../api/ExpressAPIProvider";
+import { CertificateProvider } from "../certificate/CertificateProvider";
+import {ChexxoServer} from "../ChexxoServer";
 
-test("Request certificate", () => {
-    const server = new ChexxoServer(new CertificateProvider(), new ExpressAPIProvider());
+test("Initialize Server", () => {
+    const expressAPIProvider = new ExpressAPIProvider();
+    const server = new ChexxoServer(new CertificateProvider(), expressAPIProvider);
+    expressAPIProvider.close();
     expect("").toEqual("");
 });
