@@ -25,16 +25,16 @@ jobs:
       - name: Run tests
         run: npm run test
       
-      - name: Run code build
-        run: npm run build:prod
+      - name: Run express build
+        run: npm run build:express
       
       - name: Run documentation build
         run: npm run build:documentation
         
-      - name: Upload code
+      - name: Upload express
         uses: actions/upload-artifact@v2.2.0
         with:
-          name: Code
+          name: Express
           path: dist/*
           if-no-files-found: error
       
