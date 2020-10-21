@@ -3,7 +3,7 @@ import { Server } from "http";
 
 export class ExpressAPIProvider implements APIProvider {
   private app: express.Application;
-  private callback: (url: string) => object;
+  private callback: (url: string) => Promise<Record<string, unknown>>;
   private server: Server;
 
   public constructor() {
@@ -14,15 +14,17 @@ export class ExpressAPIProvider implements APIProvider {
     this.init = this.init.bind(this);
   }
 
-  public init(callback: (url: string) => object): void {
+  public init(
+    callback: (url: string) => Promise<Record<string, unknown>>
+  ): void {
     this.callback = callback;
     this.configureAPI();
     this.startAPI();
   }
 
   private configureAPI(): void {
-    this.app.get("/getCertificate/:url", async (req, res, next) => {
-      let cert = await this.callback(req.params.url);
+    this.app.get("/getCertificate/:url", async (req, res) => {
+      const cert = await this.callback(req.params.url);
       res.json(cert);
     });
   }
@@ -33,7 +35,7 @@ export class ExpressAPIProvider implements APIProvider {
     });
   }
 
-  public close(): void{
+  public close(): void {
     this.server.close();
   }
 }
