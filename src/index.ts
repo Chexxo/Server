@@ -36,10 +36,3 @@ duper();
 */
 
 var server = new ChexxoServer();
-/*const prov = new CertificateProvider();
-prov.getCertificate('www.google.com').then((cert) => {
-  console.log("Yay");
-  console.log(cert);
-}).catch(() => {
-  console.log("Nay");
-});*/

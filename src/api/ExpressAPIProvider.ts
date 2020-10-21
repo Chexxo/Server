@@ -1,7 +1,8 @@
-import * as express from "express";
+import { Request, Response, Application } from 'express';
+import express = require('express');
 
 export class ExpressAPIProvider implements APIPRovider {
-  private app: express.Application;
+  private app: Application;
   private callback: (url: string) => object;
 
   public constructor() {
@@ -19,7 +20,7 @@ export class ExpressAPIProvider implements APIPRovider {
   }
 
   private configureAPI(): void {
-    this.app.get("/getCertificate/:url", async (req, res, next) => {
+    this.app.get("/getCertificate/:url", async (req: Request, res: Response, next) => {
       let cert = await this.callback(req.params.url);
       res.json(cert);
     });
