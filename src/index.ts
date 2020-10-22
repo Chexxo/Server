@@ -1,4 +1,5 @@
-const chexxoServer = require("./ChexxoServer.js").ChexxoServer;
+import { CertificateProvider } from "./certificate/CertificateProvider.js";
+import { ChexxoServer } from "./ChexxoServer.js";
 
 //const prov = new certificateProvider();
 //const cert = async prov.getCertificate("google.com");
@@ -34,5 +35,4 @@ async function duper(): Promise<void> {
 duper();
 */
 
-var server = new chexxoServer();
-server.certificateCallback("www.google.com");
+var server = new ChexxoServer();
