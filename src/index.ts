@@ -1,6 +1,6 @@
-import { ExpressAPIProvider } from "./api/ExpressAPIProvider";
-import { CertificateProvider } from "./certificate/CertificateProvider";
-import { ChexxoServer } from "./ChexxoServer";
+import ExpressAPIProvider from "./api/ExpressAPIProvider";
+import CertificateProvider from "./certificate/CertificateProvider";
+import ChexxoServer from "./ChexxoServer";
 
 //const prov = new certificateProvider();
 //const cert = async prov.getCertificate("google.com");
