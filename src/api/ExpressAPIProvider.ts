@@ -1,4 +1,5 @@
-import * as express from "express";
+import { Request, Response, Application } from 'express';
+import express = require('express');;
 import { Server } from "http";
 
 export class ExpressAPIProvider implements APIProvider {
@@ -23,7 +24,7 @@ export class ExpressAPIProvider implements APIProvider {
   }
 
   private configureAPI(): void {
-    this.app.get("/getCertificate/:url", async (req, res) => {
+    this.app.get("/getCertificate/:url", async (req: Request, res: Response) => {
       const cert = await this.callback(req.params.url);
       res.json(cert);
     });
