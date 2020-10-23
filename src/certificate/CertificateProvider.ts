@@ -1,4 +1,7 @@
 import { request } from "https";
+import Certificate from "../CommonTypes/certificate/Certificate";
+import Issuer from "../CommonTypes/certificate/Issuer";
+import Subject from "../CommonTypes/certificate/Subject";
 
 class HTTPSOptions {
   public host: string;
@@ -6,7 +9,7 @@ class HTTPSOptions {
   public method: string;
 }
 
-export class CertificateProvider {
+export default class CertificateProvider {
   options: HTTPSOptions;
 
   public constructor() {
@@ -20,7 +23,7 @@ export class CertificateProvider {
 
   public async fetchCertificateByUrl(
     url: string
-  ): Promise<Record<string, unknown>> {
+  ): Promise<Certificate | string> /*Promise<Record<string, unknown>>*/ {
     // Implement error handling like revocation etc.
     this.options.host = url;
     console.log("Provider:" + this.options.host);
@@ -32,7 +35,11 @@ export class CertificateProvider {
         res.on("data", function () {});
         res.on("end", () => {
           if (res.statusCode >= 200 && res.statusCode <= 299) {
-            resolve(res.socket.getPeerCertificate());
+            resolve(
+              CertificateProvider.fabricateCertificate(
+                res.socket.getPeerCertificate()
+              )
+            );
           } else {
             reject("Request failed. Status: " + res.statusCode);
           }
@@ -41,5 +48,37 @@ export class CertificateProvider {
       req.on("error", reject);
       req.end();
     });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private static fabricateCertificate(certObject: any): Certificate {
+    const issuer = new Issuer(
+      certObject.issuer.CN,
+      certObject.issuer.O,
+      certObject.issuer.OU,
+      certObject.issuer.L,
+      certObject.issuer.S,
+      certObject.issuer.C
+    );
+    const subject = new Subject(
+      certObject.subject.CN,
+      certObject.subject.O,
+      certObject.subject.OU,
+      certObject.subject.L,
+      certObject.subject.S,
+      certObject.subject.C
+    );
+
+    return new Certificate(
+      certObject.fingerprint,
+      certObject.fingerprint256,
+      issuer,
+      certObject.serialNumber,
+      subject,
+      certObject.subjectaltname,
+      certObject.valid_from,
+      certObject.valid_to,
+      false
+    );
   }
 }

@@ -1,10 +1,12 @@
-import { Request, Response, Application } from 'express';
-import express = require('express');;
+import { Request, Response, Application } from "express";
+import express = require("express");
 import { Server } from "http";
+import Certificate from "../CommonTypes/certificate/Certificate";
+import APIProvider from "./APIProvider";
 
-export class ExpressAPIProvider implements APIProvider {
+export default class ExpressAPIProvider implements APIProvider {
   private app: express.Application;
-  private callback: (url: string) => Promise<Record<string, unknown>>;
+  private callback: (url: string) => Promise<Certificate | string>;
   private server: Server;
 
   public constructor() {
@@ -15,19 +17,20 @@ export class ExpressAPIProvider implements APIProvider {
     this.init = this.init.bind(this);
   }
 
-  public init(
-    callback: (url: string) => Promise<Record<string, unknown>>
-  ): void {
+  public init(callback: (url: string) => Promise<Certificate | string>): void {
     this.callback = callback;
     this.configureAPI();
     this.startAPI();
   }
 
   private configureAPI(): void {
-    this.app.get("/getCertificate/:url", async (req: Request, res: Response) => {
-      const cert = await this.callback(req.params.url);
-      res.json(cert);
-    });
+    this.app.get(
+      "/getCertificate/:url",
+      async (req: Request, res: Response) => {
+        const cert = await this.callback(req.params.url);
+        res.json(cert);
+      }
+    );
   }
 
   private startAPI(): void {

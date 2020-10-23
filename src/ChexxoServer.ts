@@ -1,6 +1,7 @@
-import { CertificateProvider } from "./certificate/CertificateProvider";
+import APIProvider from "./api/APIProvider";
+import CertificateProvider from "./certificate/CertificateProvider";
 
-export class ChexxoServer {
+export default class ChexxoServer {
   public constructor(
     private certificateProvider: CertificateProvider,
     private apiProvider: APIProvider
