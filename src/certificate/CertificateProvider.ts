@@ -1,4 +1,4 @@
-import * as https from "https";
+import { request } from "https";
 
 class HTTPSOptions {
   public host: string;
@@ -15,16 +15,20 @@ export class CertificateProvider {
       port: 443,
       method: "GET",
     };
-    this.getCertificate = this.getCertificate.bind(this);
+    this.fetchCertificateByUrl = this.fetchCertificateByUrl.bind(this);
   }
 
-  public async getCertificate(url: string): Promise<object> {
+  public async fetchCertificateByUrl(
+    url: string
+  ): Promise<Record<string, unknown>> {
     // Implement error handling like revocation etc.
     this.options.host = url;
     console.log("Provider:" + this.options.host);
     return new Promise((resolve, reject) => {
-      const req = https.request(this.options, function (res: any) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const req = request(this.options, function (res: any) {
         res.on("error", reject);
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         res.on("data", function () {});
         res.on("end", () => {
           if (res.statusCode >= 200 && res.statusCode <= 299) {

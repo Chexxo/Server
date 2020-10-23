@@ -1,0 +1,3 @@
+[submodule "src/CommonTypes"]
+	path = src/CommonTypes
+	url = git@github.com:Chexxo/CommonTypes.git

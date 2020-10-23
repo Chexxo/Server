@@ -1,3 +1,3 @@
-interface APIPRovider {
-  init(callback: (url: string) => object): void;
+interface APIProvider {
+  init(callback: (url: string) => Promise<Record<string, unknown>>): void;
 }
