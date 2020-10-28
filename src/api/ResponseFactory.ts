@@ -12,26 +12,26 @@ export default class ResponseFactory {
   }
 
   public async createResponse(url: string): Promise<APIResponse> {
+    const responseBody = {
+      error: {
+        code: -1,
+        message: "",
+      },
+    };
     try {
       const result = await this.certificateProvider.fetchCertificateByUrl(url);
-      return new APIResponse(200, result);
+      return new APIResponse(200, this.certificateAnalyzer.analyze(result));
     } catch (e) {
       if (e instanceof ServerError) {
         //Log error
-        return new APIResponse(500, {
-          error: {
-            code: e.code,
-            message: e.publicMessage,
-          },
-        });
+        responseBody.error.code = e.code;
+        responseBody.error.message = e.publicMessage;
+        return new APIResponse(500, responseBody);
       }
 
-      return new APIResponse(418, {
-        error: {
-          code: e.code,
-          message: e.message,
-        },
-      });
+      responseBody.error.code = e.code;
+      responseBody.error.message = e.message;
+      return new APIResponse(418, responseBody);
     }
   }
 }
