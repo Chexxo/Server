@@ -1,24 +1,24 @@
 import { Request, Response, Application } from "express";
 import express = require("express");
 import { Server } from "http";
-import Certificate from "../CommonTypes/certificate/Certificate";
+import APIResponse from "../types/api/APIResponse";
 import APIProvider from "./APIProvider";
 
 export default class ExpressAPIProvider implements APIProvider {
   private app: express.Application;
-  private callback: (url: string) => Promise<Certificate | string>;
+  private responseCallback: (url: string) => Promise<APIResponse>;
   private server: Server;
 
   public constructor() {
     this.app = express();
-    this.callback = () => {
+    this.responseCallback = () => {
       throw new Error("Provider not initialized");
     };
     this.init = this.init.bind(this);
   }
 
-  public init(callback: (url: string) => Promise<Certificate | string>): void {
-    this.callback = callback;
+  public init(responseCallback: (url: string) => Promise<APIResponse>): void {
+    this.responseCallback = responseCallback;
     this.configureAPI();
     this.startAPI();
   }
@@ -27,8 +27,14 @@ export default class ExpressAPIProvider implements APIProvider {
     this.app.get(
       "/getCertificate/:url",
       async (req: Request, res: Response) => {
-        const cert = await this.callback(req.params.url);
-        res.json(cert);
+        let response;
+        try {
+          response = await this.responseCallback(req.params.url);
+        } catch (errorResponse) {
+          response = errorResponse;
+        }
+        res.statusCode = response.statusCode;
+        res.json(response.body);
       }
     );
   }

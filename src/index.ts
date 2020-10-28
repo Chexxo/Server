@@ -1,4 +1,6 @@
 import ExpressAPIProvider from "./api/ExpressAPIProvider";
+import ResponseFactory from "./api/ResponseFactory";
+import CertificateAnalyzer from "./certificate/CertificateAnalyzer";
 import CertificateProvider from "./certificate/CertificateProvider";
 import ChexxoServer from "./ChexxoServer";
 
@@ -37,8 +39,8 @@ duper();
 */
 
 const server = new ChexxoServer(
-  new CertificateProvider(),
-  new ExpressAPIProvider()
+  new ExpressAPIProvider(),
+  new ResponseFactory(new CertificateProvider(), new CertificateAnalyzer())
 );
 
 server.init();
