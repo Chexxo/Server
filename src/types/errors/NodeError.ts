@@ -3,5 +3,5 @@
  * Is used in order to analyze the errors thrown by the NodeJS https module.
  */
 export default class NodeError extends Error {
-  readonly code: string;
+  public code: string;
 }

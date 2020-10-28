@@ -1,12 +1,12 @@
 import { request } from "https";
-import Certificate from "../CommonTypes/certificate/Certificate";
-import Issuer from "../CommonTypes/certificate/Issuer";
-import Subject from "../CommonTypes/certificate/Subject";
-import ExpiredError from "../CommonTypes/errors/certificate/ExpiredError";
-import NoHostError from "../CommonTypes/errors/NoHostError";
-import SelfSignedError from "../CommonTypes/errors/certificate/SelfSignedError";
-import UntrustedRootError from "../CommonTypes/errors/certificate/UntrustedRootError";
-import WrongHostError from "../CommonTypes/errors/certificate/WrongHostError";
+import Certificate from "../types/CommonTypes/certificate/Certificate";
+import Issuer from "../types/CommonTypes/certificate/Issuer";
+import Subject from "../types/CommonTypes/certificate/Subject";
+import ExpiredError from "../types/CommonTypes/errors/certificate/ExpiredError";
+import NoHostError from "../types/CommonTypes/errors/NoHostError";
+import SelfSignedError from "../types/CommonTypes/errors/certificate/SelfSignedError";
+import UntrustedRootError from "../types/CommonTypes/errors/certificate/UntrustedRootError";
+import WrongHostError from "../types/CommonTypes/errors/certificate/WrongHostError";
 import NodeError from "../types/errors/NodeError";
 import ServerError from "../types/errors/ServerError";
 
