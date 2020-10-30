@@ -1,11 +1,14 @@
 jest.mock("https");
+jest.mock("./CertificateFactory");
 import ExpiredError from "../types/CommonTypes/errors/certificate/ExpiredError";
 import SelfSignedError from "../types/CommonTypes/errors/certificate/SelfSignedError";
 import UntrustedRootError from "../types/CommonTypes/errors/certificate/UntrustedRootError";
 import InvalidDomainError from "../types/CommonTypes/errors/certificate/InvalidDomainError";
 import NoHostError from "../types/CommonTypes/errors/NoHostError";
 import CertificateProvider from "./CertificateProvider";
-import ServerError from "../types/errors/ServerError";
+import ServerError from "../types/CommonTypes/errors/ServerError";
+import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseError";
+import Certificate from "../types/CommonTypes/certificate/Certificate";
 
 const certificateProvider = new CertificateProvider();
 
@@ -45,15 +48,28 @@ test("Check no host", () => {
     .catch((data: NoHostError) => expect(data).toBeInstanceOf(NoHostError));
 });
 
-test("Check unexpected", () => {
+test("Check unexpected request error", () => {
   return certificateProvider
     .fetchCertificateByUrl("--")
     .catch((data: ServerError) => expect(data).toBeInstanceOf(ServerError));
 });
 
-// eslint-disable-next-line jest/no-commented-out-tests
-/*test("Check invalid response", () => {
+test("Check invalid response code", () => {
+  return certificateProvider
+    .fetchCertificateByUrl("invalid.response.example.com")
+    .catch((data: InvalidResponseError) =>
+      expect(data).toBeInstanceOf(InvalidResponseError)
+    );
+});
+
+test("Check unexpected response error", () => {
+  return certificateProvider
+    .fetchCertificateByUrl("error.response.example.com")
+    .catch((data: ServerError) => expect(data).toBeInstanceOf(ServerError));
+});
+
+test("Check sunny case", () => {
   return certificateProvider
     .fetchCertificateByUrl("example.com")
-    .catch((data: ServerError) => expect(data).toBeInstanceOf(ServerError));
-});*/
+    .then((data: Certificate) => expect(data).toBeInstanceOf(Certificate));
+});

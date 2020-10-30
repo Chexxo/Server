@@ -1,7 +1,8 @@
 import CertificateAnalyzer from "../certificate/CertificateAnalyzer";
 import CertificateProvider from "../certificate/CertificateProvider";
-import ServerError from "../types/errors/ServerError";
+import ServerError from "../types/CommonTypes/errors/ServerError";
 import APIResponse from "../types/api/APIResponse";
+import CodedError from "../types/CommonTypes/errors/CodedError";
 
 export default class ResponseFactory {
   constructor(
@@ -15,7 +16,7 @@ export default class ResponseFactory {
     const responseBody = {
       error: {
         code: -1,
-        message: "",
+        publicMessage: "",
       },
     };
     try {
@@ -25,13 +26,19 @@ export default class ResponseFactory {
       if (e instanceof ServerError) {
         //Log error
         responseBody.error.code = e.code;
-        responseBody.error.message = e.publicMessage;
+        responseBody.error.publicMessage = e.publicMessage;
+        return new APIResponse(500, responseBody);
+      } else if (e instanceof CodedError) {
+        responseBody.error.code = e.code;
+        responseBody.error.publicMessage = e.message;
+        return new APIResponse(418, responseBody);
+      } else {
+        //log error
+        e = new ServerError(e);
+        responseBody.error.code = e.code;
+        responseBody.error.publicMessage = e.message;
         return new APIResponse(500, responseBody);
       }
-
-      responseBody.error.code = e.code;
-      responseBody.error.message = e.message;
-      return new APIResponse(418, responseBody);
     }
   }
 }
