@@ -12,6 +12,7 @@ export default class CertificateFactory {
    * @returns The created certificate object.
    */
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
   public static fabricateCertificate(certObject: any): Certificate {
     const issuer = new Issuer(
       certObject.issuer.CN,

@@ -12,7 +12,7 @@ export default class CertificateFactory {
    * @returns The created certificate object.
    */
 
-  public static fabricateCertificate(certObject: any): Certificate {
+  public static fabricateCertificate(): Certificate {
     const issuer = new Issuer(
       "example.com",
       "Example INC",
