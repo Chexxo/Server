@@ -5,6 +5,7 @@ import NoHostError from "../types/CommonTypes/errors/NoHostError";
 import SelfSignedError from "../types/CommonTypes/errors/certificate/SelfSignedError";
 import UntrustedRootError from "../types/CommonTypes/errors/certificate/UntrustedRootError";
 import InvalidDomainError from "../types/CommonTypes/errors/certificate/InvalidDomainError";
+import ConnectionRefusedError from "../types/CommonTypes/errors/ConnectionRefusedError";
 
 /**
  * The ErrorFactory contains methods which create an Error from another object.
@@ -28,6 +29,8 @@ export default class ErrorFactory {
         return new UntrustedRootError(error.stack);
       case "ENOTFOUND":
         return new NoHostError(error.stack);
+      case "ECONNREFUSED":
+        return new ConnectionRefusedError(error.stack);
       default:
         return new ServerError(error);
     }

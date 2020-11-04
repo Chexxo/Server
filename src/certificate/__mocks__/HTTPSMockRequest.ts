@@ -34,6 +34,10 @@ export default class HTTPSMockRequest {
             error.code = "ENOTFOUND";
             cb(error);
             break;
+          case "connection.refused.example.com":
+            error.code = "ECONNREFUSED";
+            cb(error);
+            break;
           case "--":
             error.code = "--";
             cb(error);

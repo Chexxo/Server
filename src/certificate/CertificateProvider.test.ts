@@ -9,6 +9,7 @@ import CertificateProvider from "./CertificateProvider";
 import ServerError from "../types/CommonTypes/errors/ServerError";
 import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseError";
 import Certificate from "../types/CommonTypes/certificate/Certificate";
+import ConnectionRefusedError from "../types/CommonTypes/errors/ConnectionRefusedError";
 
 const certificateProvider = new CertificateProvider();
 
@@ -46,6 +47,14 @@ test("Check no host", () => {
   return certificateProvider
     .fetchCertificateByUrl("no.host.example.com")
     .catch((data: NoHostError) => expect(data).toBeInstanceOf(NoHostError));
+});
+
+test("Check host refused", () => {
+  return certificateProvider
+    .fetchCertificateByUrl("connection.refused.example.com")
+    .catch((data: ConnectionRefusedError) =>
+      expect(data).toBeInstanceOf(ConnectionRefusedError)
+    );
 });
 
 test("Check unexpected request error", () => {

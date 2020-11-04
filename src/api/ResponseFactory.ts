@@ -1,18 +1,17 @@
-import CertificateAnalyzer from "../certificate/CertificateAnalyzer";
 import CertificateProvider from "../certificate/CertificateProvider";
 import ServerError from "../types/CommonTypes/errors/ServerError";
 import APIResponse from "../types/api/APIResponse";
 import CodedError from "../types/CommonTypes/errors/CodedError";
 
 export default class ResponseFactory {
-  constructor(
-    private certificateProvider: CertificateProvider,
-    private certificateAnalyzer: CertificateAnalyzer
-  ) {
+  constructor(private certificateProvider: CertificateProvider) {
     this.createResponse = this.createResponse.bind(this);
   }
 
   public async createResponse(url: string): Promise<APIResponse> {
+    //const buff = Buffer.from(url, "base64");
+    //url = buff.toString("ascii");
+
     const responseBody = {
       error: {
         code: -1,
@@ -21,7 +20,7 @@ export default class ResponseFactory {
     };
     try {
       const result = await this.certificateProvider.fetchCertificateByUrl(url);
-      return new APIResponse(200, this.certificateAnalyzer.analyze(result));
+      return new APIResponse(200, result);
     } catch (e) {
       if (e instanceof ServerError) {
         //Log error

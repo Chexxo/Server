@@ -2,6 +2,7 @@ import ExpiredError from "../types/CommonTypes/errors/certificate/ExpiredError";
 import InvalidDomainError from "../types/CommonTypes/errors/certificate/InvalidDomainError";
 import SelfSignedError from "../types/CommonTypes/errors/certificate/SelfSignedError";
 import UntrustedRootError from "../types/CommonTypes/errors/certificate/UntrustedRootError";
+import ConnectionRefusedError from "../types/CommonTypes/errors/ConnectionRefusedError";
 import NoHostError from "../types/CommonTypes/errors/NoHostError";
 import ServerError from "../types/CommonTypes/errors/ServerError";
 import ErrorFactory from "./ErrorFactory";
@@ -42,6 +43,13 @@ test("Check untrusted root", () => {
 test("Check no host", () => {
   const error = { code: "ENOTFOUND", name: "", message: "" };
   expect(ErrorFactory.getClassFromError(error)).toBeInstanceOf(NoHostError);
+});
+
+test("Check host refused", () => {
+  const error = { code: "ECONNREFUSED", name: "", message: "" };
+  expect(ErrorFactory.getClassFromError(error)).toBeInstanceOf(
+    ConnectionRefusedError
+  );
 });
 
 test("Check default", () => {
