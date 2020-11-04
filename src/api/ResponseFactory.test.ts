@@ -1,4 +1,3 @@
-import CertificateAnalyzer from "../certificate/CertificateAnalyzer";
 import CertificateProvider from "../certificate/CertificateProvider";
 import APIResponse from "../types/api/APIResponse";
 import ResponseFactory from "./ResponseFactory";
