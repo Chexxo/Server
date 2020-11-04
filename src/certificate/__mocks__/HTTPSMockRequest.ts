@@ -14,22 +14,6 @@ export default class HTTPSMockRequest {
       case "error":
         const error = new NodeError();
         switch (this.options.host) {
-          case "self-signed.example.com":
-            error.code = "DEPTH_ZERO_SELF_SIGNED_CERT";
-            cb(error);
-            break;
-          case "expired.example.com":
-            error.code = "CERT_HAS_EXPIRED";
-            cb(error);
-            break;
-          case "wrong.host.example.com":
-            error.code = "ERR_TLS_CERT_ALTNAME_INVALID";
-            cb(error);
-            break;
-          case "untrusted.root.example.com":
-            error.code = "SELF_SIGNED_CERT_IN_CHAIN";
-            cb(error);
-            break;
           case "no.host.example.com":
             error.code = "ENOTFOUND";
             cb(error);

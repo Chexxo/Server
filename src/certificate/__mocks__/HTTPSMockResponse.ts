@@ -3,6 +3,9 @@ import NodeError from "../../types/errors/NodeError";
 
 export default class HTTPSMockResponse {
   public statusCode = 200;
+  public headers = {
+    location: "",
+  };
 
   constructor(readonly options: RequestOptions) {}
 
@@ -20,7 +23,13 @@ export default class HTTPSMockResponse {
       case "end":
         switch (this.options.host) {
           case "invalid.response.example.com":
+            this.statusCode = 101;
+          case "invalid.redirect.example.com":
             this.statusCode = 301;
+          case "valid.redirect.example.com":
+            this.statusCode = 301;
+            this.headers.location =
+              "https://valid.redirect.example.com/test/m.html";
           default:
             cb();
             break;

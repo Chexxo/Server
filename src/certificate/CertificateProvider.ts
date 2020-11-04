@@ -1,4 +1,5 @@
-import { request } from "https";
+import { request, Agent } from "https";
+import { parse as URLHelper } from "url";
 import Certificate from "../types/CommonTypes/certificate/Certificate";
 import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseError";
 import NodeError from "../types/errors/NodeError";
@@ -9,6 +10,7 @@ class HTTPSOptions {
   public host: string;
   public port: number;
   public method: string;
+  public agent?: Agent;
 }
 
 /**
@@ -18,10 +20,13 @@ export default class CertificateProvider {
   options: HTTPSOptions;
 
   public constructor() {
+    const agentOptions = { rejectUnauthorized: false, maxCachedSessions: 0 };
+    const agent = new Agent(agentOptions);
     this.options = {
       host: "",
       port: 443,
       method: "GET",
+      agent: agent,
     };
     this.fetchCertificateByUrl = this.fetchCertificateByUrl.bind(this);
   }
@@ -50,6 +55,16 @@ export default class CertificateProvider {
                 res.socket.getPeerCertificate(true)
               )
             );
+          } else if (res.statusCode == 301 || res.statusCode == 302) {
+            if (URLHelper(res.headers.location).hostname == url) {
+              resolve(
+                CertificateFactory.fabricateCertificate(
+                  res.socket.getPeerCertificate()
+                )
+              );
+            } else {
+              reject(new InvalidResponseError(res.statusCode));
+            }
           } else {
             reject(new InvalidResponseError(res.statusCode));
           }
