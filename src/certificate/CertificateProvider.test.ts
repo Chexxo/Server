@@ -71,6 +71,20 @@ test("Check invalid response code", () => {
     );
 });
 
+test("Check valid redirect", () => {
+  return certificateProvider
+    .fetchCertificateByUrl("valid.redirect.example.com")
+    .catch((data: Certificate) => expect(data).toBeInstanceOf(Certificate));
+});
+
+test("Check invalid redirect", () => {
+  return certificateProvider
+    .fetchCertificateByUrl("invalid.redirect.example.com")
+    .catch((data: InvalidResponseError) =>
+      expect(data).toBeInstanceOf(InvalidResponseError)
+    );
+});
+
 test("Check unexpected response error", () => {
   return certificateProvider
     .fetchCertificateByUrl("error.response.example.com")

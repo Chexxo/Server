@@ -64,7 +64,6 @@ export default class CertificateProvider {
               reject(new InvalidResponseError(res.statusCode));
             }
           } else {
-            console.log(res.headers.location);
             reject(new InvalidResponseError(res.statusCode));
           }
         });
