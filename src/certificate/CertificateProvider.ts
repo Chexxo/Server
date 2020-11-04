@@ -47,7 +47,7 @@ export default class CertificateProvider {
           if (res.statusCode >= 200 && res.statusCode <= 299) {
             resolve(
               CertificateFactory.fabricateCertificate(
-                res.socket.getPeerCertificate()
+                res.socket.getPeerCertificate(true)
               )
             );
           } else {
