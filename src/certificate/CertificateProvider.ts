@@ -1,5 +1,5 @@
 import { request } from "https";
-import { parse as UrlHelper } from "url";
+import { parse as URLHelper } from "url";
 import Certificate from "../types/CommonTypes/certificate/Certificate";
 import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseError";
 import NodeError from "../types/errors/NodeError";
@@ -36,7 +36,6 @@ export default class CertificateProvider {
    */
   public async fetchCertificateByUrl(url: string): Promise<Certificate> {
     this.options.host = url;
-    console.log(UrlHelper(url));
 
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -49,14 +48,23 @@ export default class CertificateProvider {
         res.on("data", function () {});
         res.on("end", () => {
           if (res.statusCode >= 200 && res.statusCode <= 299) {
-            //console.log(res.socket);
-            console.log(res.socket.getPeerCertificate());
             resolve(
               CertificateFactory.fabricateCertificate(
                 res.socket.getPeerCertificate()
               )
             );
+          } else if (res.statusCode == 301 || res.statusCode == 302) {
+            if (URLHelper(res.headers.location).hostname == url) {
+              resolve(
+                CertificateFactory.fabricateCertificate(
+                  res.socket.getPeerCertificate()
+                )
+              );
+            } else {
+              reject(new InvalidResponseError(res.statusCode));
+            }
           } else {
+            console.log(res.headers.location);
             reject(new InvalidResponseError(res.statusCode));
           }
         });
