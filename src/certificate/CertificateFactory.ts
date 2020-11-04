@@ -1,6 +1,7 @@
 import Certificate from "../types/CommonTypes/certificate/Certificate";
 import Issuer from "../types/CommonTypes/certificate/Issuer";
 import Subject from "../types/CommonTypes/certificate/Subject";
+import CertificateAnalyzer from "./CertificateAnalyzer";
 
 /**
  * The CertificateFactory contains methods which create a certificate from another object.
@@ -40,7 +41,7 @@ export default class CertificateFactory {
       certObject.subjectaltname,
       certObject.valid_from,
       certObject.valid_to,
-      false
+      CertificateAnalyzer.hasExtendedValidation(certObject.raw)
     );
   }
 }

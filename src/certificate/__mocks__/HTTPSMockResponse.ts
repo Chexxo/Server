@@ -24,12 +24,15 @@ export default class HTTPSMockResponse {
         switch (this.options.host) {
           case "invalid.response.example.com":
             this.statusCode = 101;
+            break;
           case "invalid.redirect.example.com":
             this.statusCode = 301;
+            break;
           case "valid.redirect.example.com":
             this.statusCode = 301;
             this.headers.location =
               "https://valid.redirect.example.com/test/m.html";
+            break;
           default:
             cb();
             break;

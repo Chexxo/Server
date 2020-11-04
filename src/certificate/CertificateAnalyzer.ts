@@ -1,18 +1,24 @@
 import { X509 } from "jsrsasign";
 
+class CertificatePolicy {
+  readonly policyoid: string;
+}
+
 export default class CertificateAnalyzer {
-  public static hasExtendedValidation(certObject: any): boolean {
-    const pemCertificate = CertificateAnalyzer.convertDerToPem(certObject.raw);
-    console.log(pemCertificate);
+  public static hasExtendedValidation(rawCert: Buffer): boolean {
+    const pemCertificate = CertificateAnalyzer.convertDerToPem(rawCert);
+
     const analyzerCert = new X509();
     analyzerCert.readCertPEM(pemCertificate);
-    analyzerCert.getExtCertificatePolicies();
-    /*let rootCert = certObject;
-    while (rootCert.fingerprint256 !== rootCert.issuerCertificate.fingerprint256) {
-      console.log("Papa:" + rootCert.issuerCertificate.fingerprint256);
-      console.log("Me:" + rootCert.issuerCertificate.fingerprint256);
-      rootCert = rootCert.issuerCertificate;
-    }*/
+    const policies = analyzerCert.getExtCertificatePolicies();
+
+    if (policies !== undefined) {
+      const extendedValidationPolicy = policies.array.find(
+        (element: CertificatePolicy) => element.policyoid === "2.23.140.1.1"
+      );
+      return extendedValidationPolicy !== undefined;
+    }
+
     return false;
   }
 
