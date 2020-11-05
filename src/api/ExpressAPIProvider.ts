@@ -6,19 +6,19 @@ import APIProvider from "./APIProvider";
 
 export default class ExpressAPIProvider implements APIProvider {
   private app: express.Application;
-  private responseCallback: (url: string) => Promise<APIResponse>;
+  private responseHandler: (url: string) => Promise<APIResponse>;
   private server: Server;
 
   public constructor() {
     this.app = express();
-    this.responseCallback = () => {
+    this.responseHandler = () => {
       throw new Error("Provider not initialized");
     };
     this.init = this.init.bind(this);
   }
 
-  public init(responseCallback: (url: string) => Promise<APIResponse>): void {
-    this.responseCallback = responseCallback;
+  public init(responseHandler: (url: string) => Promise<APIResponse>): void {
+    this.responseHandler = responseHandler;
     this.configureAPI();
     this.startAPI();
   }
@@ -29,7 +29,7 @@ export default class ExpressAPIProvider implements APIProvider {
       async (req: Request, res: Response) => {
         let response;
         try {
-          response = await this.responseCallback(req.params.url);
+          response = await this.responseHandler(req.params.url);
         } catch (errorResponse) {
           response = errorResponse;
         }
