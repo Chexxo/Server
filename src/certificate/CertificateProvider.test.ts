@@ -1,10 +1,6 @@
 jest.mock("https");
 jest.mock("./CertificateFactory");
 
-import ExpiredError from "../types/CommonTypes/errors/certificate/ExpiredError";
-import SelfSignedError from "../types/CommonTypes/errors/certificate/SelfSignedError";
-import UntrustedRootError from "../types/CommonTypes/errors/certificate/UntrustedRootError";
-import InvalidDomainError from "../types/CommonTypes/errors/certificate/InvalidDomainError";
 import NoHostError from "../types/CommonTypes/errors/NoHostError";
 import CertificateProvider from "./CertificateProvider";
 import ServerError from "../types/CommonTypes/errors/ServerError";
@@ -13,36 +9,6 @@ import Certificate from "../types/CommonTypes/certificate/Certificate";
 import ConnectionRefusedError from "../types/CommonTypes/errors/ConnectionRefusedError";
 
 const certificateProvider = new CertificateProvider();
-
-test("Check self signed", () => {
-  return certificateProvider
-    .fetchCertificateByUrl("self-signed.example.com")
-    .catch((data: SelfSignedError) =>
-      expect(data).toBeInstanceOf(SelfSignedError)
-    );
-});
-
-test("Check expired", () => {
-  return certificateProvider
-    .fetchCertificateByUrl("expired.example.com")
-    .catch((data: ExpiredError) => expect(data).toBeInstanceOf(ExpiredError));
-});
-
-test("Check invalid domain", () => {
-  return certificateProvider
-    .fetchCertificateByUrl("wrong.host.example.com")
-    .catch((data: InvalidDomainError) =>
-      expect(data).toBeInstanceOf(InvalidDomainError)
-    );
-});
-
-test("Check untrusted root", () => {
-  return certificateProvider
-    .fetchCertificateByUrl("untrusted.root.example.com")
-    .catch((data: UntrustedRootError) =>
-      expect(data).toBeInstanceOf(UntrustedRootError)
-    );
-});
 
 test("Check no host", () => {
   return certificateProvider

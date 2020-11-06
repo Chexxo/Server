@@ -1,4 +1,4 @@
-import { request } from "https";
+import { request, Agent } from "https";
 import { parse as parseUrl } from "url";
 import Certificate from "../types/CommonTypes/certificate/Certificate";
 import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseError";
@@ -10,7 +10,7 @@ class HTTPSOptions {
   public host: string;
   public port: number;
   public method: string;
-  public agent?: boolean;
+  public agent?: Agent;
 }
 
 /**
@@ -20,11 +20,13 @@ export default class CertificateProvider {
   options: HTTPSOptions;
 
   public constructor() {
+    const agentOptions = { rejectUnauthorized: false, maxCachedSessions: 0 };
+    const agent = new Agent(agentOptions);
     this.options = {
       host: "",
       port: 443,
       method: "GET",
-      agent: false,
+      agent: agent,
     };
     this.fetchCertificateByUrl = this.fetchCertificateByUrl.bind(this);
   }
