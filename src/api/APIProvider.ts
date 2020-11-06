@@ -1,5 +1,5 @@
-import Certificate from "../CommonTypes/certificate/Certificate";
+import ResponseFactory from "./ResponseFactory";
 
 export default interface APIProvider {
-  init(callback: (url: string) => Promise<Certificate | string>): void;
+  init(responseFactory: ResponseFactory): void;
 }

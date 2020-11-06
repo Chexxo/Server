@@ -10,7 +10,8 @@
     "test:watch": "npx jest --watch",
     "build:prod": "./node_modules/.bin/tsc -p ./tsconfig.prod.json",
     "build:express": "npm run build:prod && node ./express-package.js",
-    "build:documentation": "npx typedoc --options ./typedoc.config.js"
+    "build:documentation": "npx typedoc --options ./typedoc.config.js",
+    "start": "node ./dist/index.js"
   },
   "repository": {
     "type": "git",
