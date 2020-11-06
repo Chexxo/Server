@@ -1,5 +1,6 @@
 jest.mock("https");
 jest.mock("./CertificateFactory");
+
 import ExpiredError from "../types/CommonTypes/errors/certificate/ExpiredError";
 import SelfSignedError from "../types/CommonTypes/errors/certificate/SelfSignedError";
 import UntrustedRootError from "../types/CommonTypes/errors/certificate/UntrustedRootError";
