@@ -1,5 +1,5 @@
 import { request, Agent } from "https";
-import { parse as URLHelper } from "url";
+import { parse as parseUrl } from "url";
 import Certificate from "../types/CommonTypes/certificate/Certificate";
 import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseError";
 import NodeError from "../types/errors/NodeError";
@@ -56,7 +56,7 @@ export default class CertificateProvider {
               )
             );
           } else if (res.statusCode == 301 || res.statusCode == 302) {
-            if (URLHelper(res.headers.location).hostname == url) {
+            if (parseUrl(res.headers.location).hostname == url) {
               resolve(
                 CertificateFactory.fabricateCertificate(
                   res.socket.getPeerCertificate()
