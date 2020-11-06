@@ -1,5 +1,5 @@
-import APIResponse from "../types/api/APIResponse";
+import ResponseFactory from "./ResponseFactory";
 
 export default interface APIProvider {
-  init(responseCallback: (url: string) => Promise<APIResponse>): void;
+  init(responseFactory: ResponseFactory): void;
 }

@@ -8,6 +8,6 @@ export default class ChexxoServer {
   ) {}
 
   public init(): void {
-    this.apiProvider.init(this.responseFactory.createResponse);
+    this.apiProvider.init(this.responseFactory);
   }
 }

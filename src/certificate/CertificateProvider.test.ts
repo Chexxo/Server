@@ -1,5 +1,6 @@
 jest.mock("https");
 jest.mock("./CertificateFactory");
+
 import NoHostError from "../types/CommonTypes/errors/NoHostError";
 import CertificateProvider from "./CertificateProvider";
 import ServerError from "../types/CommonTypes/errors/ServerError";
