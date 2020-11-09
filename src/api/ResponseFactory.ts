@@ -8,7 +8,7 @@ class ErrorResponse {
 }
 
 class ResponseBody {
-  constructor(readonly error: ErrorResponse) {}
+  constructor(readonly error: ErrorResponse, readonly certificate: string) {}
 }
 
 export default class ResponseFactory {
@@ -19,27 +19,20 @@ export default class ResponseFactory {
   public async createResponse(url: string): Promise<APIResponse> {
     try {
       const result = await this.certificateProvider.fetchCertificateByUrl(url);
-      return new APIResponse(200, result);
+      const responseBody = new ResponseBody(null, result.pem);
+      return new APIResponse(200, responseBody);
     } catch (e) {
-      if (e instanceof ServerError) {
-        //Log error
-        const responseBody = new ResponseBody(
-          new ErrorResponse(e.code, e.publicMessage)
-        );
-        return new APIResponse(500, responseBody);
-      } else if (e instanceof CodedError) {
-        const responseBody = new ResponseBody(
-          new ErrorResponse(e.code, e.message)
-        );
-        return new APIResponse(418, responseBody);
-      } else {
-        //log error
+      //Log error
+      if (!(e instanceof CodedError)) {
         e = new ServerError(e);
-        const responseBody = new ResponseBody(
-          new ErrorResponse(e.code, e.publicMessage)
-        );
-        return new APIResponse(500, responseBody);
       }
+
+      const responseBody = new ResponseBody(
+        new ErrorResponse(e.code, e.publicMessage),
+        null
+      );
+
+      return new APIResponse(500, responseBody);
     }
   }
 }

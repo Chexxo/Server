@@ -45,7 +45,9 @@ export default class HTTPSMockResponse {
 
   public socket = {
     getPeerCertificate: jest.fn().mockImplementation(() => {
-      return {};
+      return {
+        raw: Buffer.from("dadssadsa", "ascii"),
+      };
     }),
   };
 }

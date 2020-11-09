@@ -3,7 +3,6 @@ import APIResponse from "../types/api/APIResponse";
 import ResponseFactory from "./ResponseFactory";
 
 jest.mock("../certificate/CertificateProvider");
-jest.mock("../certificate/CertificateAnalyzer");
 
 let responseFactory: ResponseFactory;
 beforeEach(() => {
@@ -20,7 +19,7 @@ test("Check error response", () => {
   return responseFactory
     .createResponse("invalid.status.example.com")
     .then((data: APIResponse) => {
-      expect(data.statusCode).toBe(418);
+      expect(data.statusCode).toBe(500);
     });
 });
 

@@ -1,10 +1,10 @@
 import { request, Agent } from "https";
 import { parse as parseUrl } from "url";
-import Certificate from "../types/CommonTypes/certificate/Certificate";
 import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseError";
 import NodeError from "../types/errors/NodeError";
-import CertificateFactory from "./CertificateFactory";
 import ErrorFactory from "../errors/ErrorFactory";
+import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
+import RawCertificateFactory from "../types/certificate/RawCertificateFactory";
 
 class HTTPSOptions {
   public host: string;
@@ -36,7 +36,7 @@ export default class CertificateProvider {
    * @param url The url of the webserver from which the certificate should be fetched.
    * @return A promise which resolves to the fetched certificate or a CertificateError if fetching failed.
    */
-  public async fetchCertificateByUrl(url: string): Promise<Certificate> {
+  public async fetchCertificateByUrl(url: string): Promise<RawCertificate> {
     this.options.host = url;
 
     return new Promise((resolve, reject) => {
@@ -51,15 +51,19 @@ export default class CertificateProvider {
         res.on("end", () => {
           if (res.statusCode >= 200 && res.statusCode <= 299) {
             resolve(
-              CertificateFactory.fabricateCertificate(
-                res.socket.getPeerCertificate(true)
+              new RawCertificate(
+                RawCertificateFactory.convertDerToPem(
+                  res.socket.getPeerCertificate().raw
+                )
               )
             );
           } else if (res.statusCode == 301 || res.statusCode == 302) {
             if (parseUrl(res.headers.location).hostname == url) {
               resolve(
-                CertificateFactory.fabricateCertificate(
-                  res.socket.getPeerCertificate()
+                new RawCertificate(
+                  RawCertificateFactory.convertDerToPem(
+                    res.socket.getPeerCertificate().raw
+                  )
                 )
               );
             } else {
