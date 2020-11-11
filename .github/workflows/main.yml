@@ -29,24 +29,26 @@ jobs:
       
       - name: Run tests
         run: npm run test
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          name: Coverage
+          path: coverage/*
+          if-no-files-found: error
       
       - name: Run express build
         run: npm run build:express
       
-      - name: Run documentation build
-        run: npm run build:documentation
-        
       - name: Upload express
         uses: actions/upload-artifact@v2.2.0
         with:
           name: Express
           path: dist/*
           if-no-files-found: error
-      
-      - name: Config aws
-        run: |
-          rm dist/index.js
-          mv dist/index_aws.js dist/index.js
+
+      - name: Run AWS build
+        run: npm run build:aws
 
       - name: Upload AWS
         uses: actions/upload-artifact@v2.2.0
@@ -55,16 +57,13 @@ jobs:
           path: dist/*
           if-no-files-found: error
       
+      - name: Run documentation build
+        run: npm run build:documentation
+      
       - name: Upload documentation
         uses: actions/upload-artifact@v2.2.0
         with:
           name: Documentation
           path: docs/*
           if-no-files-found: error
-      
-      - name: Upload coverage
-        uses: actions/upload-artifact@v2.2.0
-        with:
-          name: Coverage
-          path: coverage/*
-          if-no-files-found: error
+
