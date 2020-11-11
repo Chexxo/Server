@@ -9,8 +9,8 @@
     "test": "npx jest --coverage true",
     "test:watch": "npx jest --watch",
     "build:dev": "rm -rf dist/ && ./node_modules/.bin/tsc -p ./tsconfig.prod.json",
-    "build:express": "npm run build:prod && node ./scripts/express-package.js",
-    "build:aws": "npm run build:prod && node ./scripts/aws-package.js",
+    "build:express": "npm run build:dev && node ./scripts/express-package.js",
+    "build:aws": "npm run build:dev && node ./scripts/aws-package.js",
     "build:documentation": "npx typedoc --options ./typedoc.config.js",
     "start": "node ./dist/index.js"
   },
