@@ -1,5 +1,5 @@
 import CertificateProvider from "../certificate/CertificateProvider";
-import APIResponse from "../types/api/APIResponse";
+import APIResponse from "../types/CommonTypes/api/APIResponse";
 import ResponseFactory from "./ResponseFactory";
 
 jest.mock("../certificate/CertificateProvider");

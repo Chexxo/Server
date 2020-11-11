@@ -19,14 +19,21 @@ export default class AWSAPIProvider implements APIProvider {
    * @returns Stringified APIResponse-body or error if no endpoint could be applied. This leads to AWS returning a Server error by itself.
    */
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-  public async getCertificate(event: any): Promise<string> {
+  public async getCertificate(event: any): Promise<unknown> {
     const path = event.rawPath.toLowerCase();
     if (!path.includes("/getcertificate/")) {
       throw Error();
     }
     const url = path.replace("/getcertificate/", "");
-    return JSON.stringify(
-      (await this.responseFactory.createResponse(url)).body
-    );
+    const apiResponse = await this.responseFactory.createResponse(url);
+    return {
+      cookies: [],
+      isBase64Encoded: false,
+      statusCode: apiResponse.statusCode,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(apiResponse.body),
+    };
   }
 }

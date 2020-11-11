@@ -43,6 +43,18 @@ jobs:
           path: dist/*
           if-no-files-found: error
       
+      - name: Config aws
+        run: |
+          rm dist/index.js
+          mv dist/index_aws.js dist/index.js
+
+      - name: Upload AWS
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          name: AWS
+          path: dist/*
+          if-no-files-found: error
+      
       - name: Upload documentation
         uses: actions/upload-artifact@v2.2.0
         with:
