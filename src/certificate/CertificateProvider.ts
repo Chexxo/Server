@@ -49,7 +49,7 @@ export default class CertificateProvider {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         res.on("data", function () {});
         res.on("end", () => {
-          if (res.statusCode >== 200 && res.statusCode <== 299) {
+          if (res.statusCode >= 200 && res.statusCode <= 299) {
             resolve(
               new RawCertificate(
                 RawCertificateFactory.convertDerToPem(
