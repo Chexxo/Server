@@ -1,8 +1,8 @@
 # Chexxo Server
 ## Introduction
-Since Chromium based browsers do not provide a possibility to read the certificate from the webRequest-API a Server component is needed in order for Chexxo to function properly. Therefore we have written a simple Server which provides the extension with the certificate for the requested Webpage.
+Since Chromium based browsers do not provide an option to read the certificate from the webRequest-API, a server component is needed in order for Chexxo to function properly. Therefore we have written a simple Server which provides the extension with the certificate for the requested Webpage.
 
-There are three possibilities how to use the Server:
+There are three ways to use the Server:
 1. Locally
     - The server can be started locally on your machine by using the provided express implementation. See tutorial down below. This is the recommended way to use the server since many Man-In-The-Middle attack vectors are mitigated when using it locally.
 2. AWS
@@ -12,15 +12,15 @@ There are three possibilities how to use the Server:
 
 ## Express Provider
 In order to deploy the express variant of the server these steps have to be followed:
-1. Install the latest version of `nodeJS` and `npm` on the system which should run the server.
+1. Install the latest version of `Node.js` and `npm` on the system which should run the server.
 2. Download the express folder from the latest server release.
 3. Unzip the folder and open a terminal within the unzipped folder.
-4. Run `npm i` this will install express which is the only dependency.
+4. Run `npm i`, this will install express.
 5. Run `node index.js` this will start the server on port 3000
-6. Test the server by opening a Browser and goint to `http://localhost:3000/getCertificate/www.google.com`
+6. Test the server by opening a Browser and going to `http://localhost:3000/getCertificate/www.google.com`
     - The output should be a json including the certificate from www.google.com
 7. Go to the settings page of your Chrome-Chexxo-Extension and fill in the setting `server` with the value `localhost:3000`.
-8. Your all set to go. Start using Chexxo.
+8. You're all set to go. Start using Chexxo.
 
 ## AWS Provider
 In order to deploy the server on AWS-Lambda these steps have to be followed:
@@ -52,7 +52,7 @@ In order to deploy the server on AWS-Lambda these steps have to be followed:
 ![Select Integrations](img/11-select-integrations.jpg)
 15. Select `$default` and click on `Edit Integration`.
 ![Select default](img/12-select-default.jpg)
-16. Select you Lambda function and click on `Save`. This has to be done even if the lambda-function is already selected.
+16. Select your Lambda function and click on `Save`. This has to be done even if the lambda-function is already selected.
 14. Congratulations your server is setup.
 15. Go to the settings page of your Chrome-Chexxo-Extension and fill in the setting `server` with the value of the API-Endpoint.
 ![Set endpoint](img/13-set-endpoint.jpg)

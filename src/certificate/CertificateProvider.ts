@@ -49,7 +49,7 @@ export default class CertificateProvider {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         res.on("data", function () {});
         res.on("end", () => {
-          if (res.statusCode >= 200 && res.statusCode <= 299) {
+          if (res.statusCode >== 200 && res.statusCode <== 299) {
             resolve(
               new RawCertificate(
                 RawCertificateFactory.convertDerToPem(
@@ -57,8 +57,8 @@ export default class CertificateProvider {
                 )
               )
             );
-          } else if (res.statusCode == 301 || res.statusCode == 302) {
-            if (parseUrl(res.headers.location).hostname == url) {
+          } else if (res.statusCode === 301 || res.statusCode === 302) {
+            if (parseUrl(res.headers.location).hostname === url) {
               resolve(
                 new RawCertificate(
                   RawCertificateFactory.convertDerToPem(
