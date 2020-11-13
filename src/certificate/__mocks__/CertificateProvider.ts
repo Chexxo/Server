@@ -3,16 +3,18 @@ import InvalidResponseError from "../../types/CommonTypes/errors/InvalidResponse
 import ServerError from "../../types/CommonTypes/errors/ServerError";
 
 export default class CertificateProvider {
-  fetchCertificateByUrl(url: string): RawCertificate {
-    switch (url) {
-      case "invalid.status.example.com":
-        throw new InvalidResponseError(301);
-      case "unexpected.example.com":
-        throw new Error();
-      case "example.com":
-        return new RawCertificate("dadssadsa");
-      default:
-        throw new ServerError(new Error());
-    }
+  async fetchCertificateByUrl(url: string): Promise<RawCertificate> {
+    return new Promise((resolve, reject) => {
+      switch (url) {
+        case "invalid.status.example.com":
+          reject(new InvalidResponseError(301));
+        case "unexpected.example.com":
+          reject(new Error());
+        case "example.com":
+          resolve(new RawCertificate("dadssadsa"));
+        default:
+          reject(new ServerError(new Error()));
+      }
+    });
   }
 }
