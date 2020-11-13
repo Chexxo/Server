@@ -1,45 +1,28 @@
-import CertificateProvider from "../certificate/CertificateProvider";
 import ServerError from "../types/CommonTypes/errors/ServerError";
-import APIResponse from "../types/api/APIResponse";
+import APIResponse from "../types/CommonTypes/api/APIResponse";
 import CodedError from "../types/CommonTypes/errors/CodedError";
+import APIResponseBody from "../types/CommonTypes/api/APIResponseBody";
+import APIResponseError from "../types/CommonTypes/api/APIResponseError";
+import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
 
-class ErrorResponse {
-  constructor(readonly code: number, readonly publicMessage: string) {}
-}
-
-class ResponseBody {
-  constructor(readonly error: ErrorResponse) {}
-}
-
-export default class ResponseFactory {
-  constructor(private certificateProvider: CertificateProvider) {
-    this.createResponse = this.createResponse.bind(this);
+export default abstract class ResponseFactory {
+  public static createResponse(rawCert: RawCertificate): APIResponse {
+    const responseBody = new APIResponseBody(null, rawCert.pem);
+    return new APIResponse(200, responseBody);
   }
 
-  public async createResponse(url: string): Promise<APIResponse> {
-    try {
-      const result = await this.certificateProvider.fetchCertificateByUrl(url);
-      return new APIResponse(200, result);
-    } catch (e) {
-      if (e instanceof ServerError) {
-        //Log error
-        const responseBody = new ResponseBody(
-          new ErrorResponse(e.code, e.publicMessage)
-        );
-        return new APIResponse(500, responseBody);
-      } else if (e instanceof CodedError) {
-        const responseBody = new ResponseBody(
-          new ErrorResponse(e.code, e.message)
-        );
-        return new APIResponse(418, responseBody);
-      } else {
-        //log error
-        e = new ServerError(e);
-        const responseBody = new ResponseBody(
-          new ErrorResponse(e.code, e.publicMessage)
-        );
-        return new APIResponse(500, responseBody);
-      }
+  public static createErrorResponse(e: Error): APIResponse {
+    let error = <CodedError>e;
+
+    if (!(e instanceof CodedError)) {
+      error = new ServerError(e);
     }
+
+    const responseBody = new APIResponseBody(
+      new APIResponseError(error.code, error.publicMessage),
+      null
+    );
+
+    return new APIResponse(500, responseBody);
   }
 }

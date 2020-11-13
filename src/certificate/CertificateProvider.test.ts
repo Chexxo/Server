@@ -1,12 +1,11 @@
 jest.mock("https");
-jest.mock("./CertificateFactory");
 
 import NoHostError from "../types/CommonTypes/errors/NoHostError";
 import CertificateProvider from "./CertificateProvider";
 import ServerError from "../types/CommonTypes/errors/ServerError";
 import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseError";
-import Certificate from "../types/CommonTypes/certificate/Certificate";
 import ConnectionRefusedError from "../types/CommonTypes/errors/ConnectionRefusedError";
+import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
 
 const certificateProvider = new CertificateProvider();
 
@@ -41,7 +40,9 @@ test("Check invalid response code", () => {
 test("Check valid redirect", () => {
   return certificateProvider
     .fetchCertificateByUrl("valid.redirect.example.com")
-    .catch((data: Certificate) => expect(data).toBeInstanceOf(Certificate));
+    .then((data: RawCertificate) =>
+      expect(data).toBeInstanceOf(RawCertificate)
+    );
 });
 
 test("Check invalid redirect", () => {
@@ -61,5 +62,7 @@ test("Check unexpected response error", () => {
 test("Check sunny case", () => {
   return certificateProvider
     .fetchCertificateByUrl("example.com")
-    .then((data: Certificate) => expect(data).toBeInstanceOf(Certificate));
+    .then((data: RawCertificate) =>
+      expect(data).toBeInstanceOf(RawCertificate)
+    );
 });
