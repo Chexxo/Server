@@ -1,6 +1,7 @@
 import { Request, Response, Application } from "express";
 import express = require("express");
 import { Server } from "http";
+import CertificateProvider from "../certificate/CertificateProvider";
 import APIProvider from "./APIProvider";
 import ResponseFactory from "./ResponseFactory";
 
@@ -10,24 +11,24 @@ import ResponseFactory from "./ResponseFactory";
 export default class ExpressAPIProvider implements APIProvider {
   private app: express.Application;
   private server: Server;
-  private responseFactory: ResponseFactory;
+  private certificateProvider: CertificateProvider;
 
   /**
    * Initializes the express server but does not start it.
    */
   public constructor() {
     this.app = express();
-    this.responseFactory = null;
+    this.certificateProvider = null;
   }
 
   /**
    * Configures and starts the Express-Server on port 3000.
-   * @param responseFactory The response factory which will be
-   * used by the APIProvider in order to get the correct
-   * {@link APIResponse}.
+   * @param certificateProvider The certificate provider
+   * which will be used by the APIProvider in order to get
+   * the {@link RawCertificate} for the url provided.
    */
-  public init(responseFactory: ResponseFactory): void {
-    this.responseFactory = responseFactory;
+  public init(certificateProvider: CertificateProvider): void {
+    this.certificateProvider = certificateProvider;
     this.configureAPI();
     this.startAPI();
   }
@@ -43,9 +44,12 @@ export default class ExpressAPIProvider implements APIProvider {
       async (req: Request, res: Response) => {
         let response;
         try {
-          response = await this.responseFactory.createResponse(req.params.url);
-        } catch (errorResponse) {
-          response = errorResponse;
+          const result = await this.certificateProvider.fetchCertificateByUrl(
+            req.params.url
+          );
+          response = await ResponseFactory.createResponse(result);
+        } catch (certificateError) {
+          response = ResponseFactory.createErrorResponse(certificateError);
         }
         res.statusCode = response.statusCode;
         res.json(response.body);

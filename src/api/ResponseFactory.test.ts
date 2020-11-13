@@ -1,40 +1,33 @@
-import CertificateProvider from "../certificate/CertificateProvider";
-import APIResponse from "../types/CommonTypes/api/APIResponse";
+import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
+import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseError";
+import ServerError from "../types/CommonTypes/errors/ServerError";
 import ResponseFactory from "./ResponseFactory";
 
-jest.mock("../certificate/CertificateProvider");
-
-let responseFactory: ResponseFactory;
-beforeEach(() => {
-  responseFactory = new ResponseFactory(new CertificateProvider());
+test("Error response", () => {
+  const response = ResponseFactory.createErrorResponse(new Error());
+  expect(response.statusCode).toBe(500);
+  expect(response.body.error.code).toBe(500);
 });
 
-test("Check ServerError", () => {
-  return responseFactory
-    .createResponse("www.google.com")
-    .then((data: APIResponse) => expect(data.statusCode).toBe(500));
+test("ServerError response", () => {
+  const response = ResponseFactory.createErrorResponse(
+    new ServerError(new Error())
+  );
+  expect(response.statusCode).toBe(500);
+  expect(response.body.error.code).toBe(500);
 });
 
-test("Check error response", () => {
-  return responseFactory
-    .createResponse("invalid.status.example.com")
-    .then((data: APIResponse) => {
-      expect(data.statusCode).toBe(500);
-    });
+test("CodedError response", () => {
+  const response = ResponseFactory.createErrorResponse(
+    new InvalidResponseError(302)
+  );
+  expect(response.statusCode).toBe(500);
+  expect(response.body.error.code).toBe(502);
 });
 
-test("Check unexpected error response", () => {
-  return responseFactory
-    .createResponse("unexpected.example.com")
-    .then((data: APIResponse) => {
-      expect(data.statusCode).toBe(500);
-    });
-});
-
-test("Check sunny case", () => {
-  return responseFactory
-    .createResponse("example.com")
-    .then((data: APIResponse) => {
-      expect(data.statusCode).toBe(200);
-    });
+test("Sunny case", () => {
+  const certificate = new RawCertificate("TestCert");
+  const response = ResponseFactory.createResponse(certificate);
+  expect(response.statusCode).toBe(200);
+  expect(response.body.certificate).toBe("TestCert");
 });

@@ -1,3 +1,4 @@
+import CertificateProvider from "../certificate/CertificateProvider";
 import APIProvider from "./APIProvider";
 import ResponseFactory from "./ResponseFactory";
 
@@ -8,18 +9,18 @@ import ResponseFactory from "./ResponseFactory";
  */
 export default class AWSAPIProvider implements APIProvider {
   /**
-   * The response factory which will be used to get the
-   * correct {@link APIResponse}.
+   * The certificate Provider which will be used to get the
+   * {@link RawCertificate} for the url.
    */
-  private responseFactory: ResponseFactory;
+  private certificateProvider: CertificateProvider;
 
   public constructor() {
-    this.responseFactory = null;
+    this.certificateProvider = null;
     this.getCertificate = this.getCertificate.bind(this);
   }
 
-  public init(responseFactory: ResponseFactory): void {
-    this.responseFactory = responseFactory;
+  public init(certificateProvider: CertificateProvider): void {
+    this.certificateProvider = certificateProvider;
   }
 
   /**
@@ -37,15 +38,21 @@ export default class AWSAPIProvider implements APIProvider {
       throw Error();
     }
     const url = path.replace("/getcertificate/", "");
-    const apiResponse = await this.responseFactory.createResponse(url);
+    let response;
+    try {
+      const result = await this.certificateProvider.fetchCertificateByUrl(url);
+      response = await ResponseFactory.createResponse(result);
+    } catch (certificateError) {
+      response = ResponseFactory.createErrorResponse(certificateError);
+    }
     return {
       cookies: [],
       isBase64Encoded: false,
-      statusCode: apiResponse.statusCode,
+      statusCode: response.statusCode,
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(apiResponse.body),
+      body: JSON.stringify(response.body),
     };
   }
 }

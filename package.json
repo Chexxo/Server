@@ -8,7 +8,7 @@
     "lint:eslint": "npx eslint ./src/ --max-warnings 0",
     "test": "npx jest --coverage true",
     "test:watch": "npx jest --watch",
-    "build:dev": "rm -rf dist/ && ./node_modules/.bin/tsc -p ./tsconfig.prod.json",
+    "build:dev": "rm -rf dist/ && ./node_modules/.bin/tsc -p ./tsconfig.dev.json",
     "build:express": "npm run build:dev && node ./scripts/express-package.js",
     "build:aws": "npm run build:dev && node ./scripts/aws-package.js",
     "build:documentation": "npx typedoc --options ./typedoc.config.js",
