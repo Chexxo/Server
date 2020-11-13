@@ -1,5 +1,4 @@
 import APIProvider from "./api/APIProvider";
-import ResponseFactory from "./api/ResponseFactory";
 import CertificateProvider from "./certificate/CertificateProvider";
 
 export default class ChexxoServer {
