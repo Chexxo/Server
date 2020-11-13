@@ -34,9 +34,7 @@ export default class ExpressAPIProvider implements APIProvider {
   }
 
   /**
-   * Configures the endpoints of the express server and is
-   * therefore responsible for setting the correct response
-   * callback.
+   * Configures the endpoints of the express server.
    */
   private configureAPI(): void {
     this.app.get(

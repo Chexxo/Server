@@ -32,7 +32,7 @@ export default class AWSAPIProvider implements APIProvider {
    * to AWS returning a Server error by itself.
    */
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-  public async getCertificate(event: any): Promise<unknown> {
+  public async getCertificate(event: any): Promise<unknown | Error> {
     const path = event.rawPath.toLowerCase();
     if (!path.includes("/getcertificate/")) {
       throw Error();
