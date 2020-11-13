@@ -1,0 +1,79 @@
+openapi: 3.0.0
+info:
+  description: "Since Chromium based browsers do not provide an option to read the certificate from the webRequest-API, a server component is needed in order for Chexxo to function properly. Therefore we have written a simple Server which provides the extension with the certificate for the requested Webpage."
+  version: "0.1.0"
+  title: "Chexxo Server"
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
+tags:
+- name: "certificate"
+  description: "Obtain the certificate of a webpage"
+paths:
+  /getCertificate/{url}:
+    get:
+      tags:
+      - "certificate"
+      summary: "Get the certificate of the provided domain"
+      description: ""
+      operationId: "getCertificate"
+      parameters:
+      - name: "url"
+        in: "path"
+        description: "The url of the domain"
+        required: true
+        schema:
+          type: "string"
+          format: "url"
+      responses:
+        "200":
+          description: "Certificate found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIResponseBody"
+        "500":
+          description: "Server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIResponseBody"
+components:
+  schemas:
+    APIResponseBody:
+      type: "object"
+      nullable: true
+      description: "The response to the getCertificate request. Error will be `null` if statusCode is `200`. Certificate will be `null` if statusCode is `500`"
+      properties:
+        error:
+          $ref: "#/components/schemas/APIResponseError"
+        certificate:
+          type: "string"
+          format: "byte"
+          description: "The pem formatted certificate of the domain provided or `null` if an error occured."
+  
+    APIResponseError: 
+      type: "object"
+      nullable: true
+      description: "The error that occured during the API-call or `null` if no error occured."
+      properties: 
+        code:
+          $ref: "#/components/schemas/ErrorCode"
+        publicMessage:
+          type: "string"
+          description: "A short description of the error."
+  
+    ErrorCode:
+      type: integer
+      enum:
+        - 500
+        - 501
+        - 502
+        - 503
+      description: >
+        The code of the error which occured.
+        Error:
+         * `500` - An internal server error occured.
+         * `501` - The host refused to open a connection.
+         * `502` - Server responded with unsupported statuscode.
+         * `503` - No host could be found with the domain provided.
