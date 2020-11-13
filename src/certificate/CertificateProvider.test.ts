@@ -6,6 +6,7 @@ import ServerError from "../types/CommonTypes/errors/ServerError";
 import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseError";
 import ConnectionRefusedError from "../types/CommonTypes/errors/ConnectionRefusedError";
 import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
+// eslint-disable-next-line jest/no-mocks-import
 import TestCertificateStore from "./__mocks__/TestCertificateStore";
 
 const certificateProvider = new CertificateProvider();
