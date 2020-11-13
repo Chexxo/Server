@@ -8,6 +8,6 @@ export default class ChexxoServer {
   ) {}
 
   public init(): void {
-    this.apiProvider.init(new CertificateProvider());
+    this.apiProvider.init(this.certificateProvider);
   }
 }
