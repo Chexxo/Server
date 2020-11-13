@@ -37,22 +37,7 @@ export default class ExpressAPIProvider implements APIProvider {
    * Configures the endpoints of the express server.
    */
   private configureAPI(): void {
-    this.app.get(
-      "/getCertificate/:url",
-      async (req: Request, res: Response) => {
-        let response;
-        try {
-          const result = await this.certificateProvider.fetchCertificateByUrl(
-            req.params.url
-          );
-          response = await ResponseFactory.createResponse(result);
-        } catch (certificateError) {
-          response = ResponseFactory.createErrorResponse(certificateError);
-        }
-        res.statusCode = response.statusCode;
-        res.json(response.body);
-      }
-    );
+    this.app.get("/getCertificate/:url", this.getCertificate);
   }
 
   /**
@@ -62,6 +47,28 @@ export default class ExpressAPIProvider implements APIProvider {
     this.server = this.app.listen(3000, () => {
       console.log("Server running on port 3000");
     });
+  }
+
+  /**
+   * Is called as soon as the /getCertificate endpoint gets
+   * requested by a user. Returns the appropriate Chexxo
+   * server API response.
+   * @param req The express request that lead to the invocation
+   * of this function.
+   * @param res The response that will be returned by express.
+   */
+  private async getCertificate(req: Request, res: Response) {
+    let response;
+    try {
+      const result = await this.certificateProvider.fetchCertificateByUrl(
+        req.params.url
+      );
+      response = await ResponseFactory.createResponse(result);
+    } catch (certificateError) {
+      response = ResponseFactory.createErrorResponse(certificateError);
+    }
+    res.statusCode = response.statusCode;
+    res.json(response.body);
   }
 
   /**

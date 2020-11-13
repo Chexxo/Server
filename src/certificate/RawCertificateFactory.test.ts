@@ -1,6 +1,7 @@
 import RawCertificateFactory from "./RawCertificateFactory";
 // eslint-disable-next-line jest/no-mocks-import
 import HTTPSMockResponse from "./__mocks__/HTTPSMockResponse";
+import TestCertificateStore from "./__mocks__/TestCertificateStore";
 
 const pem =
   "MIIEyDCCA7CgAwIBAgIRALL+P2asRHyfAgAAAAB9mgMwDQYJKoZIhvcNAQELBQAw" +
@@ -64,12 +65,12 @@ const res = new HTTPSMockResponse({});
 
 test("Der to certificate", () => {
   const cert = RawCertificateFactory.convertDerToRawCertificate(
-    Buffer.from(pem, "base64")
+    Buffer.from(TestCertificateStore.pem, "base64")
   );
-  expect(cert.pem).toBe(pemExtended);
+  expect(cert.pem).toBe(TestCertificateStore.extendedPem);
 });
 
 test("Response to certificate", () => {
   const cert = RawCertificateFactory.getRawCertificateFromResponse(res);
-  expect(cert.pem).toBe(pemExtended);
+  expect(cert.pem).toBe(TestCertificateStore.extendedPem);
 });

@@ -29,5 +29,10 @@ test("Sunny case", () => {
   const certificate = new RawCertificate("TestCert");
   const response = ResponseFactory.createResponse(certificate);
   expect(response.statusCode).toBe(200);
+});
+
+test("Sunny case data", () => {
+  const certificate = new RawCertificate("TestCert");
+  const response = ResponseFactory.createResponse(certificate);
   expect(response.body.certificate).toBe("TestCert");
 });
