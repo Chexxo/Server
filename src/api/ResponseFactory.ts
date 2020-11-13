@@ -6,7 +6,7 @@ import APIResponseError from "../types/CommonTypes/api/APIResponseError";
 import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
 
 /**
- * Helper class for generating api responses.
+ * Helper class for generating API responses.
  */
 export default abstract class ResponseFactory {
   /**

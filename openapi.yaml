@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: "Since Chromium based browsers do not provide an option to read the certificate from the webRequest-API, a server component is needed in order for Chexxo to function properly. Therefore we have written a simple Server which provides the extension with the certificate for the requested Webpage."
+  description: "Since Chromium based browsers do not provide an option to read the certificate from the webRequest-API, a server component is needed in order for Chexxo to function properly. Therefore we have written a simple server which provides the extension with the certificate for the requested webpage."
   version: "0.1.0"
   title: "Chexxo Server"
   license:

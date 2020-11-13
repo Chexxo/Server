@@ -29,7 +29,7 @@ export default class AWSAPIProvider implements APIProvider {
    * @param event The AWS generated event for the request.
    * @returns Stringified AWS-Lambda conform json body or error
    * if no endpoint could be applied. Returning an error leads
-   * to AWS returning a Server error by itself.
+   * to AWS returning a server error by itself.
    */
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
   public async getCertificate(event: any): Promise<unknown | Error> {
