@@ -1,5 +1,6 @@
+import CertificateProvider from "../certificate/CertificateProvider";
 import ResponseFactory from "./ResponseFactory";
 
 export default interface APIProvider {
-  init(responseFactory: ResponseFactory): void;
+  init(certificateProvider: CertificateProvider): void;
 }
