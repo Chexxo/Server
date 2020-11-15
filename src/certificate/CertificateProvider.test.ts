@@ -9,13 +9,13 @@ import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
 
 const certificateProvider = new CertificateProvider();
 
-test("Check no host", () => {
+test("No host", () => {
   return certificateProvider
     .fetchCertificateByUrl("no.host.example.com")
     .catch((data: NoHostError) => expect(data).toBeInstanceOf(NoHostError));
 });
 
-test("Check host refused", () => {
+test("Host refused", () => {
   return certificateProvider
     .fetchCertificateByUrl("connection.refused.example.com")
     .catch((data: ConnectionRefusedError) =>
@@ -23,13 +23,13 @@ test("Check host refused", () => {
     );
 });
 
-test("Check unexpected request error", () => {
+test("Unexpected request error", () => {
   return certificateProvider
     .fetchCertificateByUrl("--")
     .catch((data: ServerError) => expect(data).toBeInstanceOf(ServerError));
 });
 
-test("Check invalid response code", () => {
+test("Invalid response code", () => {
   return certificateProvider
     .fetchCertificateByUrl("invalid.response.example.com")
     .catch((data: InvalidResponseError) =>
@@ -37,7 +37,7 @@ test("Check invalid response code", () => {
     );
 });
 
-test("Check valid redirect", () => {
+test("Valid redirect", () => {
   return certificateProvider
     .fetchCertificateByUrl("valid.redirect.example.com")
     .then((data: RawCertificate) =>
@@ -45,7 +45,7 @@ test("Check valid redirect", () => {
     );
 });
 
-test("Check invalid redirect", () => {
+test("Invalid redirect", () => {
   return certificateProvider
     .fetchCertificateByUrl("invalid.redirect.example.com")
     .catch((data: InvalidResponseError) =>
@@ -53,13 +53,13 @@ test("Check invalid redirect", () => {
     );
 });
 
-test("Check unexpected response error", () => {
+test("Unexpected response error", () => {
   return certificateProvider
     .fetchCertificateByUrl("error.response.example.com")
     .catch((data: ServerError) => expect(data).toBeInstanceOf(ServerError));
 });
 
-test("Check sunny case", () => {
+test("Sunny case", () => {
   return certificateProvider
     .fetchCertificateByUrl("example.com")
     .then((data: RawCertificate) =>

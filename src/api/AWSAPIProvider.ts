@@ -2,7 +2,16 @@ import CertificateProvider from "../certificate/CertificateProvider";
 import APIProvider from "./APIProvider";
 import ResponseFactory from "./ResponseFactory";
 
+/**
+ * The {@link APIProvider} implementation for AWS. This
+ * provider has to be used by AWS-Lambda. The callback
+ * function for lambda is {@link AWSAPIProvider.getCertificate}.
+ */
 export default class AWSAPIProvider implements APIProvider {
+  /**
+   * The certificate Provider which will be used to get the
+   * {@link RawCertificate} for the url.
+   */
   private certificateProvider: CertificateProvider;
 
   public constructor() {
@@ -15,12 +24,15 @@ export default class AWSAPIProvider implements APIProvider {
   }
 
   /**
-   *
+   * The AWS-Lambda callback. It provides a response according
+   * to the AWS-Lambda specifications.
    * @param event The AWS generated event for the request.
-   * @returns Stringified APIResponse-body or error if no endpoint could be applied. This leads to AWS returning a Server error by itself.
+   * @returns Stringified AWS-Lambda conform json body or error
+   * if no endpoint could be applied. Returning an error leads
+   * to AWS returning a server error by itself.
    */
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-  public async getCertificate(event: any): Promise<unknown> {
+  public async getCertificate(event: any): Promise<unknown | Error> {
     const path = event.rawPath.toLowerCase();
     if (!path.includes("/getcertificate/")) {
       throw Error();

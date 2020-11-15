@@ -4,7 +4,7 @@ import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseErr
 import NodeError from "../types/errors/NodeError";
 import ErrorFactory from "../errors/ErrorFactory";
 import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
-import RawCertificateFactory from "../types/certificate/RawCertificateFactory";
+import RawCertificateFactory from "./RawCertificateFactory";
 
 class HTTPSOptions {
   public host: string;
@@ -14,7 +14,7 @@ class HTTPSOptions {
 }
 
 /**
- * The CertificareProvider class is responsible for fetching the certificate from the specified url.
+ * Class for fetching the certificate of the url provided.
  */
 export default class CertificateProvider {
   options: HTTPSOptions;
@@ -34,51 +34,54 @@ export default class CertificateProvider {
   /**
    * Fetches the https certificate from the given url.
    * @param url The url of the webserver from which the certificate should be fetched.
-   * @return A promise which resolves to the fetched certificate or a CertificateError if fetching failed.
+   * @return A promise which resolves to the fetched certificate or a CertificateError
+   * if fetching failed.
    */
   public async fetchCertificateByUrl(url: string): Promise<RawCertificate> {
     this.options.host = url;
-
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const req = request(this.options, function (res: any) {
-        res.on("error", (responseError: NodeError) => {
-          const error = ErrorFactory.getClassFromError(responseError);
-          reject(error);
-        });
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        res.on("data", function () {});
-        res.on("end", () => {
-          if (res.statusCode >= 200 && res.statusCode <= 299) {
-            resolve(
-              new RawCertificate(
-                RawCertificateFactory.convertDerToPem(
-                  res.socket.getPeerCertificate().raw
-                )
-              )
-            );
-          } else if (res.statusCode === 301 || res.statusCode === 302) {
-            if (parseUrl(res.headers.location).hostname === url) {
-              resolve(
-                new RawCertificate(
-                  RawCertificateFactory.convertDerToPem(
-                    res.socket.getPeerCertificate().raw
-                  )
-                )
-              );
-            } else {
-              reject(new InvalidResponseError(res.statusCode));
-            }
-          } else {
-            reject(new InvalidResponseError(res.statusCode));
-          }
-        });
+      const req = request(this.options, (res) => {
+        CertificateProvider.handleResponse(res, url, resolve, reject);
       });
       req.on("error", (requestError: NodeError) => {
         const error = ErrorFactory.getClassFromError(requestError);
         reject(error);
       });
       req.end();
+    });
+  }
+
+  /**
+   * Handles the response of the node https module.
+   * @param res The node https module response object.
+   * @param url The url which was requested.
+   * @param resolve The function to resolve the fetchCertificateByUrl promise.
+   * @param reject The function to reject the fetchCertificateByUrl promise
+   */
+  private static handleResponse(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    res: any,
+    url: string,
+    resolve: (value?: RawCertificate | PromiseLike<RawCertificate>) => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    reject: (reason?: any) => void
+  ): void {
+    res.on("error", (responseError: NodeError) => {
+      const error = ErrorFactory.getClassFromError(responseError);
+      reject(error);
+    });
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    res.on("data", function () {});
+    res.on("end", () => {
+      if (res.statusCode >= 200 && res.statusCode <= 299) {
+        resolve(RawCertificateFactory.getRawCertificateFromResponse(res));
+      } else if (res.statusCode === 301 || res.statusCode === 302) {
+        if (parseUrl(res.headers.location).hostname === url) {
+          resolve(RawCertificateFactory.getRawCertificateFromResponse(res));
+        }
+      }
+      reject(new InvalidResponseError(res.statusCode));
     });
   }
 }
