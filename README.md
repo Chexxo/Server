@@ -10,6 +10,12 @@ There are three ways to use the Server:
 3. Chexxo-Provided
     - The extension comes preconfigured with the server provided by us. Whilst we do make sure the same code that is in this repository is also deployed on the server we do encourage you to use one of the options above. The main reason being, that we want to prevent overloading our infrastructure.
 
+### API
+The api is documented in an OpenApi conform yaml [document](./openapi.yaml). It can be viewed by using the swagger editor [here](https://editor.swagger.io/).
+
+### Documentation
+The code documentation is done in typedoc and can be viewed by looking into the documentation folder of the respective release.
+
 ## Express Provider
 In order to deploy the express variant of the server these steps have to be followed:
 1. Install the latest version of `Node.js` and `npm` on the system which should run the server.

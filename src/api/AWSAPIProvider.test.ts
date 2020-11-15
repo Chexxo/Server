@@ -27,14 +27,11 @@ test("Unexpected CertificateProvider error", () => {
 });
 
 test("Sunny case", () => {
-  return (
-    apiProvider
-      .getCertificate({
-        rawPath: "example.com/getcertificate/",
-      })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((data: any) =>
-        expect(data.body).toBe('{"error":null,"certificate":"dadssadsa"}')
-      )
-  );
+  return apiProvider
+    .getCertificate({
+      rawPath: "example.com/getcertificate/",
+    })
+    .then((data: { body: unknown }) =>
+      expect(data.body).toBe('{"error":null,"certificate":"dadssadsa"}')
+    );
 });
