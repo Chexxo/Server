@@ -6,7 +6,7 @@ import TestCertificateStore from "./__mocks__/TestCertificateStore";
 
 const res = new HTTPSMockResponse({});
 
-test("Der to certificate", () => {
+test("DER to certificate", () => {
   const cert = RawCertificateFactory.convertDerToRawCertificate(
     Buffer.from(TestCertificateStore.pem, "base64")
   );
