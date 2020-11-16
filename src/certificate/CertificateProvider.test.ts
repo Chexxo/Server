@@ -6,6 +6,8 @@ import ServerError from "../types/CommonTypes/errors/ServerError";
 import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseError";
 import ConnectionRefusedError from "../types/CommonTypes/errors/ConnectionRefusedError";
 import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
+// eslint-disable-next-line jest/no-mocks-import
+import TestCertificateStore from "./__mocks__/TestCertificateStore";
 
 const certificateProvider = new CertificateProvider();
 
@@ -64,5 +66,13 @@ test("Sunny case", () => {
     .fetchCertificateByUrl("example.com")
     .then((data: RawCertificate) =>
       expect(data).toBeInstanceOf(RawCertificate)
+    );
+});
+
+test("Sunny case data", () => {
+  return certificateProvider
+    .fetchCertificateByUrl("example.com")
+    .then((data: RawCertificate) =>
+      expect(data.pem).toBe(TestCertificateStore.extendedPem)
     );
 });
