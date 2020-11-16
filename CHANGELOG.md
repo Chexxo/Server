@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.0] - 2020-11-15
+## [1.0.0] - 2020-11-16
 ### Added
 - Add functionality to get the certificate of a domain.
 - Add `getCertificate` endpoint to API which returns the fetched certificate in PEM-format.
