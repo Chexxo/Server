@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2020-11-18
+### Changed
+- Improve CI for better usage of limited GitHub space.
+
+### Fixed
+- Adjust redirect logic to detect valid relative redirects.
+- Fix ExpressProvider by binding the getCertificate function to the class.
+
 ## [1.0.0] - 2020-11-16
 ### Added
 - Add functionality to get the certificate of a domain.
