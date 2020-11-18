@@ -77,11 +77,30 @@ export default class CertificateProvider {
       if (res.statusCode >= 200 && res.statusCode <= 299) {
         resolve(RawCertificateFactory.getRawCertificateFromResponse(res));
       } else if (res.statusCode === 301 || res.statusCode === 302) {
-        if (parseUrl(res.headers.location).hostname === url) {
+        if (CertificateProvider.isSameSiteRedirect(url, res.headers.location)) {
           resolve(RawCertificateFactory.getRawCertificateFromResponse(res));
         }
       }
       reject(new InvalidResponseError(res.statusCode));
     });
+  }
+
+  /**
+   * Validates if the redirect remains on the domain which the user requested.
+   *
+   * @param url The url which was fetched.
+   * @param locationHeader The location header which indicates where the user will
+   * be redirected to.
+   */
+  private static isSameSiteRedirect(
+    url: string,
+    locationHeader: string
+  ): boolean {
+    const relativePathRegex = /^[^\/]+\/[^\/].*$|^\/[^\/].*$/g;
+
+    if (url === parseUrl(locationHeader).hostname) {
+      return true;
+    }
+    return relativePathRegex.test(locationHeader);
   }
 }
