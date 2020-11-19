@@ -19,6 +19,7 @@ export default class ExpressAPIProvider implements APIProvider {
   public constructor() {
     this.app = express();
     this.certificateProvider = null;
+    this.getCertificate = this.getCertificate.bind(this);
   }
 
   /**
