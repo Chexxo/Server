@@ -4,6 +4,9 @@ import CodedError from "../types/CommonTypes/errors/CodedError";
 import APIResponseBody from "../types/CommonTypes/api/APIResponseBody";
 import APIResponseError from "../types/CommonTypes/api/APIResponseError";
 import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
+import Logger from "../helpers/Logger";
+import UUIDFactory from "../helpers/UUIDFactory";
+import { LogLevel } from "../helpers/LogLevel";
 
 /**
  * Helper class for generating API responses.
@@ -17,6 +20,9 @@ export default abstract class ResponseFactory {
    * returned by the {@link APIProvider}.
    */
   public static createResponse(rawCert: RawCertificate): APIResponse {
+    Logger.log(LogLevel.INFO, "Test Log");
+    Logger.log(LogLevel.ERROR, "Test Log", new Error());
+
     const responseBody = new APIResponseBody(null, rawCert.pem);
     return new APIResponse(200, responseBody);
   }
@@ -32,11 +38,15 @@ export default abstract class ResponseFactory {
     let error = <CodedError>e;
 
     if (!(e instanceof CodedError)) {
-      error = new ServerError(e);
+      error = new ServerError(UUIDFactory.uuidv4(), e);
     }
 
     const responseBody = new APIResponseBody(
-      new APIResponseError(error.code, error.publicMessage),
+      new APIResponseError(
+        UUIDFactory.uuidv4(),
+        error.code,
+        error.publicMessage
+      ),
       null
     );
 

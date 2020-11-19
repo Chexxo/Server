@@ -5,6 +5,7 @@ import NodeError from "../types/errors/NodeError";
 import ErrorFactory from "../errors/ErrorFactory";
 import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
 import RawCertificateFactory from "./RawCertificateFactory";
+import UUIDFactory from "../helpers/UUIDFactory";
 
 class HTTPSOptions {
   public host: string;
@@ -81,7 +82,7 @@ export default class CertificateProvider {
           resolve(RawCertificateFactory.getRawCertificateFromResponse(res));
         }
       }
-      reject(new InvalidResponseError(res.statusCode));
+      reject(new InvalidResponseError(UUIDFactory.uuidv4(), res.statusCode));
     });
   }
 
