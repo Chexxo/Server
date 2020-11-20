@@ -1,13 +1,13 @@
-import { ExpressPersistenceManager } from "../helpers/ExpressPersistenceManager";
-import { Logger, LogLevel } from "../helpers/Logger";
+import { ExpressPersistenceManager } from "../logger/ExpressPersistenceManager";
+import { Logger, LogLevel } from "../shared/logger/Logger";
 import { UUIDFactory } from "../helpers/UUIDFactory";
-import { APIResponse } from "../types/CommonTypes/types/api/APIResponse";
-import { APIResponseBody } from "../types/CommonTypes/types/api/APIResponseBody";
-import { APIResponseError } from "../types/CommonTypes/types/api/APIResponseError";
-import { RawCertificate } from "../types/CommonTypes/certificate/RawCertificate";
-import { CodedError } from "../types/CommonTypes/errors/CodedError";
-import { NoHostError } from "../types/CommonTypes/errors/NoHostError";
-import { ServerError } from "../types/CommonTypes/errors/ServerError";
+import { APIResponse } from "../shared/types/api/APIResponse";
+import { APIResponseBody } from "../shared/types/api/APIResponseBody";
+import { APIResponseError } from "../shared/types/api/APIResponseError";
+import { RawCertificate } from "../shared/types/certificate/RawCertificate";
+import { CodedError } from "../shared/types/errors/CodedError";
+import { NoHostError } from "../shared/types/errors/NoHostError";
+import { ServerError } from "../shared/types/errors/ServerError";
 
 /**
  * Helper class for generating API responses.

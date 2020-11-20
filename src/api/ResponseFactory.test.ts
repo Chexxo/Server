@@ -1,7 +1,7 @@
 import { UUIDFactory } from "../helpers/UUIDFactory";
-import { RawCertificate } from "../types/CommonTypes/certificate/RawCertificate";
-import { InvalidResponseError } from "../types/CommonTypes/errors/InvalidResponseError";
-import { ServerError } from "../types/CommonTypes/errors/ServerError";
+import { RawCertificate } from "../shared/types/certificate/RawCertificate";
+import { InvalidResponseError } from "../shared/types/errors/InvalidResponseError";
+import { ServerError } from "../shared/types/errors/ServerError";
 import { ResponseFactory } from "./ResponseFactory";
 
 test("Error response", () => {

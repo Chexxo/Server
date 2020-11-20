@@ -1,8 +1,8 @@
 import { UUIDFactory } from "../helpers/UUIDFactory";
-import { CodedError } from "../types/CommonTypes/errors/CodedError";
-import { ConnectionRefusedError } from "../types/CommonTypes/errors/ConnectionRefusedError";
-import { NoHostError } from "../types/CommonTypes/errors/NoHostError";
-import { ServerError } from "../types/CommonTypes/errors/ServerError";
+import { CodedError } from "../shared/types/errors/CodedError";
+import { ConnectionRefusedError } from "../shared/types/errors/ConnectionRefusedError";
+import { NoHostError } from "../shared/types/errors/NoHostError";
+import { ServerError } from "../shared/types/errors/ServerError";
 import { NodeError } from "../types/errors/NodeError";
 
 /**

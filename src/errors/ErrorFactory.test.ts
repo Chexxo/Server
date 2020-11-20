@@ -1,6 +1,6 @@
-import { ConnectionRefusedError } from "../types/CommonTypes/errors/ConnectionRefusedError";
-import { NoHostError } from "../types/CommonTypes/errors/NoHostError";
-import { ServerError } from "../types/CommonTypes/errors/ServerError";
+import { ConnectionRefusedError } from "../shared/types/errors/ConnectionRefusedError";
+import { NoHostError } from "../shared/types/errors/NoHostError";
+import { ServerError } from "../shared/types/errors/ServerError";
 import { ErrorFactory } from "./ErrorFactory";
 
 test("Check no host", () => {

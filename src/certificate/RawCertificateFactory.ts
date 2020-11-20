@@ -1,4 +1,4 @@
-import { RawCertificate } from "../types/CommonTypes/certificate/RawCertificate";
+import { RawCertificate } from "../shared/types/certificate/RawCertificate";
 
 /**
  * Helper class wich provides functionality for the creation of

@@ -1,5 +1,5 @@
 import { IncomingMessage, RequestOptions } from "http";
-import HTTPSMockRequest from "./HTTPSMockRequest";
+import { HTTPSMockRequest } from "./HTTPSMockRequest";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const https = <any>jest.createMockFromModule("https");
