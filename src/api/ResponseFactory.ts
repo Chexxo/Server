@@ -1,17 +1,18 @@
-import ServerError from "../types/CommonTypes/errors/ServerError";
-import APIResponse from "../types/CommonTypes/api/APIResponse";
-import CodedError from "../types/CommonTypes/errors/CodedError";
-import APIResponseBody from "../types/CommonTypes/api/APIResponseBody";
-import APIResponseError from "../types/CommonTypes/api/APIResponseError";
-import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
-import Logger from "../helpers/Logger";
-import UUIDFactory from "../helpers/UUIDFactory";
-import { LogLevel } from "../helpers/LogLevel";
+import { ExpressPersistenceManager } from "../helpers/ExpressPersistenceManager";
+import { Logger, LogLevel } from "../helpers/Logger";
+import { UUIDFactory } from "../helpers/UUIDFactory";
+import { APIResponse } from "../types/CommonTypes/types/api/APIResponse";
+import { APIResponseBody } from "../types/CommonTypes/types/api/APIResponseBody";
+import { APIResponseError } from "../types/CommonTypes/types/api/APIResponseError";
+import { RawCertificate } from "../types/CommonTypes/certificate/RawCertificate";
+import { CodedError } from "../types/CommonTypes/errors/CodedError";
+import { NoHostError } from "../types/CommonTypes/errors/NoHostError";
+import { ServerError } from "../types/CommonTypes/errors/ServerError";
 
 /**
  * Helper class for generating API responses.
  */
-export default abstract class ResponseFactory {
+export abstract class ResponseFactory {
   /**
    * Creates an {@link APIResponse} with status `200`.
    * @param rawCert The certificate which should
@@ -20,8 +21,15 @@ export default abstract class ResponseFactory {
    * returned by the {@link APIProvider}.
    */
   public static createResponse(rawCert: RawCertificate): APIResponse {
-    Logger.log(LogLevel.INFO, "Test Log");
-    Logger.log(LogLevel.ERROR, "Test Log", new Error());
+    const logger = new Logger(new ExpressPersistenceManager());
+    logger.log(LogLevel.INFO, "Test Log");
+    logger.log(
+      LogLevel.ERROR,
+      "Test Log",
+      new NoHostError("123123", new Error().stack)
+    );
+
+    logger.log(LogLevel.ERROR, "Test Log", new NoHostError("123123"));
 
     const responseBody = new APIResponseBody(null, rawCert.pem);
     return new APIResponse(200, responseBody);

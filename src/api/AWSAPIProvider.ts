@@ -1,13 +1,13 @@
-import CertificateProvider from "../certificate/CertificateProvider";
-import APIProvider from "./APIProvider";
-import ResponseFactory from "./ResponseFactory";
+import { CertificateProvider } from "../certificate/CertificateProvider";
+import { APIProvider } from "./APIProvider";
+import { ResponseFactory } from "./ResponseFactory";
 
 /**
  * The {@link APIProvider} implementation for AWS. This
  * provider has to be used by AWS-Lambda. The callback
  * function for lambda is {@link AWSAPIProvider.getCertificate}.
  */
-export default class AWSAPIProvider implements APIProvider {
+export class AWSAPIProvider implements APIProvider {
   /**
    * The certificate Provider which will be used to get the
    * {@link RawCertificate} for the url.

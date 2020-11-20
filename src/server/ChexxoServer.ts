@@ -1,11 +1,11 @@
-import APIProvider from "../api/APIProvider";
-import CertificateProvider from "../certificate/CertificateProvider";
+import { APIProvider } from "../api/APIProvider";
+import { CertificateProvider } from "../certificate/CertificateProvider";
 
 /**
  * Represents the chexxo server. Holds all server
  * components and initalizes objects needed.
  */
-export default class ChexxoServer {
+export class ChexxoServer {
   public constructor(
     /**
      * The {@link APIProvider} that will be used

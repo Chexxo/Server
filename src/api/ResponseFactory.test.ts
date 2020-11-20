@@ -1,7 +1,8 @@
-import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
-import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseError";
-import ServerError from "../types/CommonTypes/errors/ServerError";
-import ResponseFactory from "./ResponseFactory";
+import { UUIDFactory } from "../helpers/UUIDFactory";
+import { RawCertificate } from "../types/CommonTypes/certificate/RawCertificate";
+import { InvalidResponseError } from "../types/CommonTypes/errors/InvalidResponseError";
+import { ServerError } from "../types/CommonTypes/errors/ServerError";
+import { ResponseFactory } from "./ResponseFactory";
 
 test("Error response", () => {
   const response = ResponseFactory.createErrorResponse(new Error());
@@ -11,7 +12,7 @@ test("Error response", () => {
 
 test("ServerError response", () => {
   const response = ResponseFactory.createErrorResponse(
-    new ServerError(new Error())
+    new ServerError(UUIDFactory.uuidv4(), new Error())
   );
   expect(response.statusCode).toBe(500);
   expect(response.body.error.code).toBe(500);
@@ -19,7 +20,7 @@ test("ServerError response", () => {
 
 test("CodedError response", () => {
   const response = ResponseFactory.createErrorResponse(
-    new InvalidResponseError(302)
+    new InvalidResponseError(UUIDFactory.uuidv4(), 302)
   );
   expect(response.statusCode).toBe(500);
   expect(response.body.error.code).toBe(502);

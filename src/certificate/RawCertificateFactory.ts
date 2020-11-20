@@ -1,10 +1,10 @@
-import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
+import { RawCertificate } from "../types/CommonTypes/certificate/RawCertificate";
 
 /**
  * Helper class wich provides functionality for the creation of
  * a {@link RawCertificate}.
  */
-export default abstract class RawCertificateFactory {
+export abstract class RawCertificateFactory {
   /**
    * Converts a binary buffer containing a certificate in `DER`
    * format into a {@link RawCertificate} object.

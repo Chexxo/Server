@@ -1,7 +1,7 @@
-import ConnectionRefusedError from "../types/CommonTypes/errors/ConnectionRefusedError";
-import NoHostError from "../types/CommonTypes/errors/NoHostError";
-import ServerError from "../types/CommonTypes/errors/ServerError";
-import ErrorFactory from "./ErrorFactory";
+import { ConnectionRefusedError } from "../types/CommonTypes/errors/ConnectionRefusedError";
+import { NoHostError } from "../types/CommonTypes/errors/NoHostError";
+import { ServerError } from "../types/CommonTypes/errors/ServerError";
+import { ErrorFactory } from "./ErrorFactory";
 
 test("Check no host", () => {
   const error = { code: "ENOTFOUND", name: "", message: "" };

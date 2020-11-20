@@ -1,9 +1,9 @@
-import CertificateProvider from "../certificate/CertificateProvider";
+import { CertificateProvider } from "../certificate/CertificateProvider";
 
 /**
  * Interface for abstracting the APIProvider
  */
-export default interface APIProvider {
+export interface APIProvider {
   /**
    * The init function responsible for starting the APIProvider.
    *

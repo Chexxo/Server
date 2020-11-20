@@ -1,8 +1,8 @@
 jest.mock("../certificate/CertificateProvider");
 
 import { Request, Response } from "express";
-import CertificateProvider from "../certificate/CertificateProvider";
-import ExpressAPIProvider from "./ExpressAPIProvider";
+import { CertificateProvider } from "../certificate/CertificateProvider";
+import { ExpressAPIProvider } from "./ExpressAPIProvider";
 
 let apiProvider: ExpressAPIProvider;
 const request = {

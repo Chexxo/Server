@@ -1,4 +1,4 @@
-export default abstract class TestCertificateStore {
+export abstract class TestCertificateStore {
   public static pem =
     "MIIEyDCCA7CgAwIBAgIRALL+P2asRHyfAgAAAAB9mgMwDQYJKoZIhvcNAQELBQAw" +
     "QjELMAkGA1UEBhMCVVMxHjAcBgNVBAoTFUdvb2dsZSBUcnVzdCBTZXJ2aWNlczET" +

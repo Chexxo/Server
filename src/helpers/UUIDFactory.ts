@@ -1,6 +1,6 @@
 import { randomInt } from "crypto";
 
-export default abstract class UUIDFactory {
+export abstract class UUIDFactory {
   public static uuidv4(): string {
     function getUUIDChar(char: string) {
       if (char === "y") {

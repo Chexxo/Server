@@ -1,7 +1,7 @@
 jest.mock("../certificate/CertificateProvider");
 
-import AWSAPIProvider from "./AWSAPIProvider";
-import CertificateProvider from "../certificate/CertificateProvider";
+import { AWSAPIProvider } from "./AWSAPIProvider";
+import { CertificateProvider } from "../certificate/CertificateProvider";
 
 let apiProvider: AWSAPIProvider;
 

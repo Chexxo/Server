@@ -1,4 +1,6 @@
-import UUIDFactory from "./UUIDFactory";
+import { CodedError } from "../types/CommonTypes/errors/CodedError";
+import { LogEntry } from "../types/CommonTypes/logger/LogEntry";
+import { LoggerPersistenceManager } from "./LoggerPersistenceManager";
 
 export enum LogLevel {
   ERROR,
@@ -6,31 +8,16 @@ export enum LogLevel {
   INFO,
 }
 
-export default abstract class Logger {
-  public static log(
-    logLevel: LogLevel,
-    message: string,
-    object?: unknown
-  ): void {
-    const date = new Date(Date.now());
-    console.log(
-      "(" +
-        Logger.formatDate(date) +
-        ") " +
-        "[" +
-        Logger.logLevelToString(logLevel) +
-        "] " +
-        message +
-        "\n",
-      object
-    );
-    console.log(UUIDFactory.uuidv4());
-    if (logLevel < LogLevel.INFO) {
-      console.log("yeet");
-    }
+export class Logger {
+  constructor(readonly persistence: LoggerPersistenceManager) {}
+
+  public log(logLevel: LogLevel, message: string, error?: CodedError): void {
+    const millisecTimestamp = Date.now();
+    const logEntry = new LogEntry(logLevel, millisecTimestamp, message, error);
+    this.persistence.save(logEntry);
   }
 
-  private static logLevelToString(logLevel: LogLevel): string {
+  public static logLevelToString(logLevel: LogLevel): string {
     switch (logLevel) {
       case LogLevel.ERROR:
         return "err";
@@ -43,7 +30,8 @@ export default abstract class Logger {
     }
   }
 
-  private static formatDate(date: Date): string {
+  public static formatTimestamp(timestamp: number): string {
+    const date = new Date(timestamp);
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
@@ -66,5 +54,37 @@ export default abstract class Logger {
       " +" +
       millisec
     );
+  }
+
+  public static formatLogEntry(logEntry: LogEntry, uuid?: string): string {
+    let uuidString = "";
+    if (uuid) {
+      uuidString = "[" + uuid + "]";
+    }
+
+    let errorString = "";
+    if (logEntry.error) {
+      errorString =
+        `    Error: ${logEntry.error.name}[${logEntry.error.code}]\n` +
+        `        Message: ${logEntry.error.message}\n` +
+        `        Trace:   ${logEntry.error.stack.replace(
+          /\n/g,
+          "\n                 "
+        )}`;
+    }
+
+    const humanReadable =
+      "(" +
+      Logger.formatTimestamp(logEntry.millisecTimestamp) +
+      ")" +
+      uuidString +
+      "[" +
+      Logger.logLevelToString(logEntry.logLevel) +
+      "] " +
+      logEntry.message +
+      "\n" +
+      errorString;
+
+    return humanReadable;
   }
 }

@@ -1,15 +1,15 @@
-import NodeError from "../types/errors/NodeError";
-import ServerError from "../types/CommonTypes/errors/ServerError";
-import NoHostError from "../types/CommonTypes/errors/NoHostError";
-import ConnectionRefusedError from "../types/CommonTypes/errors/ConnectionRefusedError";
-import CodedError from "../types/CommonTypes/errors/CodedError";
-import UUIDFactory from "../helpers/UUIDFactory";
+import { UUIDFactory } from "../helpers/UUIDFactory";
+import { CodedError } from "../types/CommonTypes/errors/CodedError";
+import { ConnectionRefusedError } from "../types/CommonTypes/errors/ConnectionRefusedError";
+import { NoHostError } from "../types/CommonTypes/errors/NoHostError";
+import { ServerError } from "../types/CommonTypes/errors/ServerError";
+import { NodeError } from "../types/errors/NodeError";
 
 /**
  * The ErrorFactory contains helper methods which create a {@link CodedError}
  * from another object.
  */
-export default class ErrorFactory {
+export class ErrorFactory {
   /**
    * Converts the error thrown by the NodeJS https module into a {@link CodedError}.
    * @param error The error thrown by the NodeJS https module.

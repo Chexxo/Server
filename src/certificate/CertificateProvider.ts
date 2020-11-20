@@ -1,11 +1,11 @@
 import { request, Agent } from "https";
 import { parse as parseUrl } from "url";
-import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseError";
-import NodeError from "../types/errors/NodeError";
-import ErrorFactory from "../errors/ErrorFactory";
-import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
-import RawCertificateFactory from "./RawCertificateFactory";
-import UUIDFactory from "../helpers/UUIDFactory";
+import { ErrorFactory } from "../errors/ErrorFactory";
+import { UUIDFactory } from "../helpers/UUIDFactory";
+import { RawCertificate } from "../types/CommonTypes/certificate/RawCertificate";
+import { InvalidResponseError } from "../types/CommonTypes/errors/InvalidResponseError";
+import { NodeError } from "../types/errors/NodeError";
+import { RawCertificateFactory } from "./RawCertificateFactory";
 
 class HTTPSOptions {
   public host: string;
@@ -17,7 +17,7 @@ class HTTPSOptions {
 /**
  * Class for fetching the certificate of the url provided.
  */
-export default class CertificateProvider {
+export class CertificateProvider {
   options: HTTPSOptions;
 
   public constructor() {

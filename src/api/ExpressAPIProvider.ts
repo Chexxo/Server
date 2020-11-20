@@ -1,14 +1,14 @@
 import { Request, Response, Application } from "express";
 import express = require("express");
 import { Server } from "http";
-import CertificateProvider from "../certificate/CertificateProvider";
-import APIProvider from "./APIProvider";
-import ResponseFactory from "./ResponseFactory";
+import { CertificateProvider } from "../certificate/CertificateProvider";
+import { APIProvider } from "./APIProvider";
+import { ResponseFactory } from "./ResponseFactory";
 
 /**
  * The {@link APIProvider} implementation for Express.
  */
-export default class ExpressAPIProvider implements APIProvider {
+export class ExpressAPIProvider implements APIProvider {
   private app: express.Application;
   private server: Server;
   private certificateProvider: CertificateProvider;
