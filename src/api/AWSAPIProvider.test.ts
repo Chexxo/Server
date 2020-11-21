@@ -7,7 +7,7 @@ let apiProvider: AWSAPIProvider;
 
 beforeEach(() => {
   apiProvider = new AWSAPIProvider();
-  apiProvider.init(new CertificateProvider());
+  apiProvider.init(new CertificateProvider(), null);
 });
 
 test("Unsupported endpoint", () => {

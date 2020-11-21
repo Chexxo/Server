@@ -3,7 +3,7 @@ import { RawCertificate } from "../../shared/types/certificate/RawCertificate";
 import { InvalidResponseError } from "../../shared/types/errors/InvalidResponseError";
 import { ServerError } from "../../shared/types/errors/ServerError";
 
-export default class CertificateProvider {
+export class CertificateProvider {
   async fetchCertificateByUrl(url: string): Promise<RawCertificate> {
     return new Promise((resolve, reject) => {
       switch (url) {

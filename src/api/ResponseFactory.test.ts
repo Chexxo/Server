@@ -1,4 +1,6 @@
+import { Server } from "http";
 import { UUIDFactory } from "../helpers/UUIDFactory";
+import { Logger } from "../shared/logger/Logger";
 import { RawCertificate } from "../shared/types/certificate/RawCertificate";
 import { InvalidResponseError } from "../shared/types/errors/InvalidResponseError";
 import { ServerError } from "../shared/types/errors/ServerError";
@@ -36,4 +38,37 @@ test("Sunny case data", () => {
   const certificate = new RawCertificate("TestCert");
   const response = ResponseFactory.createResponse(certificate);
   expect(response.body.certificate).toBe("TestCert");
+});
+
+test("Logger called error", () => {
+  const logger = {
+    log: jest.fn(),
+  };
+  ResponseFactory.createErrorResponse(
+    new InvalidResponseError("1234", 302),
+    <Logger>(<unknown>logger)
+  );
+  expect(logger.log).toHaveBeenCalled();
+});
+
+test("Logger called ServerError", () => {
+  const logger = {
+    log: jest.fn(),
+  };
+  ResponseFactory.createErrorResponse(
+    new ServerError("1234", new Error()),
+    <Logger>(<unknown>logger)
+  );
+  expect(logger.log).toHaveBeenCalled();
+});
+
+test("Logger called no error", () => {
+  const logger = {
+    log: jest.fn(),
+  };
+  ResponseFactory.createResponse(
+    new RawCertificate(""),
+    <Logger>(<unknown>logger)
+  );
+  expect(logger.log).toHaveBeenCalled();
 });

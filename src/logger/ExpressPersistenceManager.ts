@@ -8,14 +8,12 @@ import {
   readdirSync,
   unlinkSync,
 } from "fs";
+import { ExpressPersistenceManagerConfig } from "./ExpressPersistenceManagerConfig";
 
 export class ExpressPersistenceManager {
-  static readonly millisecondsADay = 86_400_000;
+  private static millisecondsADay = 86_400_000;
 
-  private logDays = 7;
-  private logDir = "./log/";
-  private logFileSystem = "system.log";
-  private logFileHuman = "human.log";
+  public constructor(private config: ExpressPersistenceManagerConfig) {}
 
   public save(logEntry: LogEntry): void {
     let uuid = null;
@@ -28,52 +26,61 @@ export class ExpressPersistenceManager {
     const logEntryReadable = Logger.formatLogEntry(logEntry, uuid);
     console.log(logEntryReadable);
     if (logEntry.logLevel < LogLevel.INFO) {
-      if (!existsSync(this.logDir)) {
-        mkdirSync(this.logDir);
+      try {
+        if (!existsSync(this.config.logDir)) {
+          mkdirSync(this.config.logDir);
+        }
+
+        this.logRotate();
+        this.writeEntry(logEntry);
+        this.writeString(logEntryReadable);
+      } catch (e) {
+        const noLogEntryMessage = new LogEntry(
+          LogLevel.WARNING,
+          Date.now(),
+          "Log could not be persisted."
+        );
+        const noLogEntryMessageReadable = Logger.formatLogEntry(
+          noLogEntryMessage,
+          null
+        );
+        console.log("\n" + noLogEntryMessageReadable);
       }
-
-      this.logRotate();
-      this.writeEntry(logEntry);
-      this.writeString(logEntryReadable);
     }
-  }
-
-  public getAll(): LogEntry[] {
-    return [];
   }
 
   private writeEntry(logEntry: LogEntry) {
     appendFileSync(
-      this.logDir +
+      this.config.logDir +
         ExpressPersistenceManager.getCurrentPrefix() +
         "_" +
-        this.logFileSystem,
+        this.config.logFileSystem,
       JSON.stringify(logEntry) + "\n"
     );
   }
 
   private writeString(logEntry: string) {
     appendFileSync(
-      this.logDir +
+      this.config.logDir +
         ExpressPersistenceManager.getCurrentPrefix() +
         "_" +
-        this.logFileHuman,
+        this.config.logFileHuman,
       logEntry + "\n"
     );
   }
 
   private logRotate(): void {
-    const files = readdirSync(this.logDir);
+    const files = readdirSync(this.config.logDir);
     const deadline =
       Date.parse(ExpressPersistenceManager.getCurrentPrefix()) -
-      this.logDays * ExpressPersistenceManager.millisecondsADay;
+      this.config.logDays * ExpressPersistenceManager.millisecondsADay;
     files.forEach((file) => {
       const millisecondTimestamp = ExpressPersistenceManager.getTimestampFromFilename(
         file
       );
       if (millisecondTimestamp !== undefined) {
         if (millisecondTimestamp <= deadline) {
-          unlinkSync(this.logDir + file);
+          unlinkSync(this.config.logDir + file);
         }
       }
     });

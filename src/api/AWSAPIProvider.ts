@@ -1,4 +1,5 @@
 import { CertificateProvider } from "../certificate/CertificateProvider";
+import { Logger } from "../shared/logger/Logger";
 import { APIProvider } from "./APIProvider";
 import { ResponseFactory } from "./ResponseFactory";
 
@@ -13,14 +14,16 @@ export class AWSAPIProvider implements APIProvider {
    * {@link RawCertificate} for the url.
    */
   private certificateProvider: CertificateProvider;
+  private logger: Logger;
 
   public constructor() {
     this.certificateProvider = null;
     this.getCertificate = this.getCertificate.bind(this);
   }
 
-  public init(certificateProvider: CertificateProvider): void {
+  public init(certificateProvider: CertificateProvider, logger: Logger): void {
     this.certificateProvider = certificateProvider;
+    this.logger = logger;
   }
 
   /**
