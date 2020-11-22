@@ -44,9 +44,13 @@ export class AWSAPIProvider implements APIProvider {
     let response;
     try {
       const result = await this.certificateProvider.fetchCertificateByUrl(url);
-      response = await ResponseFactory.createResponse(result);
+      response = await ResponseFactory.createResponse(result, url, this.logger);
     } catch (certificateError) {
-      response = ResponseFactory.createErrorResponse(certificateError);
+      response = ResponseFactory.createErrorResponse(
+        certificateError,
+        url,
+        this.logger
+      );
     }
     return {
       cookies: [],

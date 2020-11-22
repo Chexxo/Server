@@ -15,15 +15,21 @@ export abstract class ResponseFactory {
    * Creates an {@link APIResponse} with status `200`.
    * @param rawCert The certificate which should
    * be included into the {@link APIResponse}.
+   * @param url The url which was called in order to
+   * get this response.
+   * @param logger The logger which should be used to
+   * log this response.
+   *
    * @returns The {@link APIResponse} which will be
    * returned by the {@link APIProvider}.
    */
   public static createResponse(
     rawCert: RawCertificate,
+    url = "",
     logger?: Logger
   ): APIResponse {
     if (logger) {
-      logger.log(LogLevel.INFO, "Response ok: 200");
+      logger.log(LogLevel.INFO, `Request: ${url} Response: 200 ok`);
     }
     const responseBody = new APIResponseBody(null, rawCert.pem);
     return new APIResponse(200, responseBody);
@@ -33,10 +39,19 @@ export abstract class ResponseFactory {
    * Creates an {@link APIResponse} with status `500`.
    * @param error The error which should
    * be included into the {@link APIResponse}.
+   * @param url The url which was called in order to
+   * get this response.
+   * @param logger The logger which should be used to
+   * log this response.
+   *
    * @returns The {@link APIResponse} which will be
    * returned by the {@link APIProvider}.
    */
-  public static createErrorResponse(e: Error, logger?: Logger): APIResponse {
+  public static createErrorResponse(
+    e: Error,
+    url = "",
+    logger?: Logger
+  ): APIResponse {
     let error = <CodedError>e;
 
     if (!(e instanceof CodedError)) {
@@ -45,9 +60,17 @@ export abstract class ResponseFactory {
 
     if (logger) {
       if (error instanceof ServerError) {
-        logger.log(LogLevel.ERROR, error.message, error);
+        logger.log(
+          LogLevel.ERROR,
+          `Request: ${url} Response: ${error.message}`,
+          error
+        );
       } else {
-        logger.log(LogLevel.WARNING, error.message, error);
+        logger.log(
+          LogLevel.WARNING,
+          `Request: ${url} Response: ${error.message}`,
+          error
+        );
       }
     }
 

@@ -67,9 +67,17 @@ export class ExpressAPIProvider implements APIProvider {
       const result = await this.certificateProvider.fetchCertificateByUrl(
         req.params.url
       );
-      response = ResponseFactory.createResponse(result, this.logger);
+      response = ResponseFactory.createResponse(
+        result,
+        req.params.url,
+        this.logger
+      );
     } catch (error) {
-      response = ResponseFactory.createErrorResponse(error, this.logger);
+      response = ResponseFactory.createErrorResponse(
+        error,
+        req.params.url,
+        this.logger
+      );
     }
     res.statusCode = response.statusCode;
     res.json(response.body);

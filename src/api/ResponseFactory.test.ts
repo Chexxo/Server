@@ -45,6 +45,7 @@ test("Logger called error", () => {
   };
   ResponseFactory.createErrorResponse(
     new InvalidResponseError("1234", 302),
+    "example.com",
     <Logger>(<unknown>logger)
   );
   expect(logger.log).toHaveBeenCalled();
@@ -56,6 +57,7 @@ test("Logger called ServerError", () => {
   };
   ResponseFactory.createErrorResponse(
     new ServerError("1234", new Error()),
+    "example.com",
     <Logger>(<unknown>logger)
   );
   expect(logger.log).toHaveBeenCalled();
@@ -67,6 +69,7 @@ test("Logger called no error", () => {
   };
   ResponseFactory.createResponse(
     new RawCertificate(""),
+    "example.com",
     <Logger>(<unknown>logger)
   );
   expect(logger.log).toHaveBeenCalled();
