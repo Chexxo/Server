@@ -60,9 +60,9 @@ export class ExpressPersistenceManager {
         );
         const noLogEntryMessageReadable = Logger.formatLogEntry(
           noLogEntryMessage,
-          null
+          UUIDFactory.uuidv4()
         );
-        console.log("\n" + noLogEntryMessageReadable);
+        console.log(noLogEntryMessageReadable);
       }
     }
   }
@@ -110,10 +110,14 @@ export class ExpressPersistenceManager {
       const millisecondTimestamp = ExpressPersistenceManager.getTimestampFromFilename(
         file
       );
-      if (millisecondTimestamp !== null) {
-        if (millisecondTimestamp <= deadline) {
-          unlinkSync(this.config.logDir + file);
-        }
+      if (millisecondTimestamp !== null && millisecondTimestamp <= deadline) {
+        unlinkSync(this.config.logDir + file);
+        const removedFileInfo = new LogEntry(
+          LogLevel.INFO,
+          Date.now(),
+          "Logrotate: " + this.config.logDir + file + " has been removed."
+        );
+        this.save(removedFileInfo);
       }
     });
     return;

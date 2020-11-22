@@ -121,6 +121,18 @@ test("Deletes old files", () => {
   expect(fs.unlinkSync).toHaveBeenLastCalledWith("./log/2020-10-05_human.log");
 });
 
+test("Writes message on file removed", () => {
+  MOCK_FILE_INFO = {
+    "./log/2020-10-05_human.log": 'console.log("file1 contents");',
+    "/path/to/file2.txt": "file2 contents",
+  };
+  fsAny.__setMockFiles(MOCK_FILE_INFO);
+  persistence.save(logEntryError);
+  expect(global.console.log).toHaveBeenLastCalledWith(
+    expect.stringMatching(/has been removed./)
+  );
+});
+
 test("Does not delete files which aren't expired", () => {
   const year = new Date().getFullYear() + 5;
   const fileString = `./log/${year}-10-05_human.log`;
