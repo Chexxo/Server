@@ -45,9 +45,9 @@ export abstract class ResponseFactory {
 
     if (logger) {
       if (error instanceof ServerError) {
-        logger.log(LogLevel.ERROR, error.publicMessage, error);
+        logger.log(LogLevel.ERROR, error.message, error);
       } else {
-        logger.log(LogLevel.WARNING, error.publicMessage, error);
+        logger.log(LogLevel.WARNING, error.message, error);
       }
     }
 

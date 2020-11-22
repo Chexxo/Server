@@ -10,11 +10,29 @@ import {
 } from "fs";
 import { ExpressPersistenceManagerConfig } from "./ExpressPersistenceManagerConfig";
 
+/**
+ * Class to persist logs when using Express. The logs
+ * are written into the log subfolder and also conveyed to
+ * the console.
+ */
 export class ExpressPersistenceManager {
   private static millisecondsADay = 86_400_000;
 
+  /**
+   * Constructs a persistence manager with the configuration
+   * given.
+   *
+   * @param config The config which will be used to persist the logs.
+   */
   public constructor(private config: ExpressPersistenceManagerConfig) {}
 
+  /**
+   * Persists the given {@link LogEntry}. Dependent on the {@link LogLevel}
+   * the log will be written to the console and a logfile or just to the
+   * console.
+   *
+   * @param logEntry The log entry to be persisted.
+   */
   public save(logEntry: LogEntry): void {
     let uuid = null;
     if (logEntry.error) {
@@ -49,30 +67,44 @@ export class ExpressPersistenceManager {
     }
   }
 
+  /**
+   * Writes a {@link LogEntry} to the system readable
+   * log file.
+   * @param logEntry The log entry to be written.
+   */
   private writeEntry(logEntry: LogEntry) {
     appendFileSync(
       this.config.logDir +
-        ExpressPersistenceManager.getCurrentPrefix() +
+        ExpressPersistenceManager.getDatePrefix() +
         "_" +
         this.config.logFileSystem,
       JSON.stringify(logEntry) + "\n"
     );
   }
 
+  /**
+   * Writes a string to the human readable
+   * log file.
+   * @param logEntry The string to be written.
+   */
   private writeString(logEntry: string) {
     appendFileSync(
       this.config.logDir +
-        ExpressPersistenceManager.getCurrentPrefix() +
+        ExpressPersistenceManager.getDatePrefix() +
         "_" +
         this.config.logFileHuman,
       logEntry + "\n"
     );
   }
 
+  /**
+   * Removes expired log files according to the
+   * configuration provided in the {@link ExpressPersistenceManagerConfig}.
+   */
   private logRotate(): void {
     const files = readdirSync(this.config.logDir);
     const deadline =
-      Date.parse(ExpressPersistenceManager.getCurrentPrefix()) -
+      Date.parse(ExpressPersistenceManager.getDatePrefix()) -
       this.config.logDays * ExpressPersistenceManager.millisecondsADay;
     files.forEach((file) => {
       const millisecondTimestamp = ExpressPersistenceManager.getTimestampFromFilename(
@@ -87,7 +119,12 @@ export class ExpressPersistenceManager {
     return;
   }
 
-  private static getCurrentPrefix(): string {
+  /**
+   * Creates a date prefix to be used int log files.
+   *
+   * @returns The created date prefix.
+   */
+  private static getDatePrefix(): string {
     const date = new Date(Date.now());
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -95,6 +132,15 @@ export class ExpressPersistenceManager {
     return year + "-" + month + "-" + day;
   }
 
+  /**
+   * Extracts the timestamp from the name of a logfile.
+   *
+   * @param filename The name of the logfile from which the
+   * timestamp should be extracted.
+   *
+   * @returns The timestamp of the date on which the log file
+   * was last written.
+   */
   private static getTimestampFromFilename(filename: string): number | null {
     const split = filename.split("_");
     const date = Date.parse(split[0]);

@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2020-11-22
+### Added
+- Add logging functionality.
+- Add uuid to APIResponseError in order to allow log correlation.
+
+### Changed
+- Adjusted openapi.yaml to represent all available fields.
+
 ## [1.0.1] - 2020-11-18
 ### Changed
 - Improve CI for better usage of limited GitHub space.

@@ -1,6 +1,15 @@
 import { randomInt } from "crypto";
 
+/**
+ * Class which is responsible for creating uuid's
+ * with the required amount of entropy.
+ */
 export abstract class UUIDFactory {
+  /**
+   * Create a uuid version 4.
+   * @returns The string representation of a uuid
+   * version 4.
+   */
   public static uuidv4(): string {
     function getUUIDChar(char: string) {
       if (char === "y") {
