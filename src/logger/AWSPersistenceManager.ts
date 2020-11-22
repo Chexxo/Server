@@ -1,6 +1,7 @@
 import { LogEntry } from "../shared/types/logger/LogEntry";
-import { Logger, LogLevel } from "../shared/logger/Logger";
+import { LogLevel } from "../shared/logger/Logger";
 import { UUIDFactory } from "../helpers/UUIDFactory";
+import { LogFactory } from "../shared/logger/LogFactory";
 
 /**
  * Class to persist logs in AWS. Since AWS has it's own
@@ -21,7 +22,7 @@ export class AWSPersistenceManager {
       uuid = UUIDFactory.uuidv4();
     }
 
-    const logEntryReadable = Logger.formatLogEntry(logEntry, uuid);
+    const logEntryReadable = LogFactory.formatLogEntry(logEntry, uuid);
     console.log(logEntryReadable);
   }
 }

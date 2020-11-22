@@ -1,5 +1,5 @@
 import { LogEntry } from "../shared/types/logger/LogEntry";
-import { Logger, LogLevel } from "../shared/logger/Logger";
+import { LogLevel } from "../shared/logger/Logger";
 import { UUIDFactory } from "../helpers/UUIDFactory";
 import {
   appendFileSync,
@@ -9,6 +9,7 @@ import {
   unlinkSync,
 } from "fs";
 import { ExpressPersistenceManagerConfig } from "./ExpressPersistenceManagerConfig";
+import { LogFactory } from "../shared/logger/LogFactory";
 
 /**
  * Class to persist logs when using Express. The logs
@@ -41,7 +42,7 @@ export class ExpressPersistenceManager {
       uuid = UUIDFactory.uuidv4();
     }
 
-    const logEntryReadable = Logger.formatLogEntry(logEntry, uuid);
+    const logEntryReadable = LogFactory.formatLogEntry(logEntry, uuid);
     console.log(logEntryReadable);
     if (logEntry.logLevel < LogLevel.INFO) {
       try {
@@ -58,7 +59,7 @@ export class ExpressPersistenceManager {
           Date.now(),
           "Log could not be persisted."
         );
-        const noLogEntryMessageReadable = Logger.formatLogEntry(
+        const noLogEntryMessageReadable = LogFactory.formatLogEntry(
           noLogEntryMessage,
           UUIDFactory.uuidv4()
         );
