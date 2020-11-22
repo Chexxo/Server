@@ -1,4 +1,3 @@
-import { Server } from "http";
 import { UUIDFactory } from "../helpers/UUIDFactory";
 import { Logger } from "../shared/logger/Logger";
 import { RawCertificate } from "../shared/types/certificate/RawCertificate";

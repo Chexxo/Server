@@ -9,7 +9,7 @@ let mockFiles = Object.create(null);
 function __setMockFiles(newMockFiles: string[]) {
   mockFiles = Object.create(null);
   for (const file in newMockFiles) {
-    const dir = path.dirname(file);
+    const dir = path.dirname(file) + "/";
 
     if (!mockFiles[dir]) {
       mockFiles[dir] = [];

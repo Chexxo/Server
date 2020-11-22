@@ -78,7 +78,7 @@ export class ExpressPersistenceManager {
       const millisecondTimestamp = ExpressPersistenceManager.getTimestampFromFilename(
         file
       );
-      if (millisecondTimestamp !== undefined) {
+      if (millisecondTimestamp !== null) {
         if (millisecondTimestamp <= deadline) {
           unlinkSync(this.config.logDir + file);
         }
@@ -95,10 +95,12 @@ export class ExpressPersistenceManager {
     return year + "-" + month + "-" + day;
   }
 
-  private static getTimestampFromFilename(
-    filename: string
-  ): number | undefined {
+  private static getTimestampFromFilename(filename: string): number | null {
     const split = filename.split("_");
-    return Date.parse(split[0]);
+    const date = Date.parse(split[0]);
+    if (isNaN(date)) {
+      return null;
+    }
+    return date;
   }
 }

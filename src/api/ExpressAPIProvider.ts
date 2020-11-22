@@ -2,8 +2,7 @@ import { Request, Response, Application } from "express";
 import express = require("express");
 import { Server } from "http";
 import { CertificateProvider } from "../certificate/CertificateProvider";
-import { Logger, LogLevel } from "../shared/logger/Logger";
-import { ServerError } from "../shared/types/errors/ServerError";
+import { Logger } from "../shared/logger/Logger";
 import { APIProvider } from "./APIProvider";
 import { ResponseFactory } from "./ResponseFactory";
 
