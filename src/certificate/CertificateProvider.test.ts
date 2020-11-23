@@ -1,13 +1,13 @@
 jest.mock("https");
 
-import NoHostError from "../types/CommonTypes/errors/NoHostError";
-import CertificateProvider from "./CertificateProvider";
-import ServerError from "../types/CommonTypes/errors/ServerError";
-import InvalidResponseError from "../types/CommonTypes/errors/InvalidResponseError";
-import ConnectionRefusedError from "../types/CommonTypes/errors/ConnectionRefusedError";
-import RawCertificate from "../types/CommonTypes/certificate/RawCertificate";
+import { RawCertificate } from "../shared/types/certificate/RawCertificate";
+import { ConnectionRefusedError } from "../shared/types/errors/ConnectionRefusedError";
+import { InvalidResponseError } from "../shared/types/errors/InvalidResponseError";
+import { NoHostError } from "../shared/types/errors/NoHostError";
+import { ServerError } from "../shared/types/errors/ServerError";
+import { CertificateProvider } from "./CertificateProvider";
 // eslint-disable-next-line jest/no-mocks-import
-import TestCertificateStore from "./__mocks__/TestCertificateStore";
+import { TestCertificateStore } from "./__mocks__/TestCertificateStore";
 
 const certificateProvider = new CertificateProvider();
 

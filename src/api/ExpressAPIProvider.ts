@@ -1,17 +1,19 @@
 import { Request, Response, Application } from "express";
 import express = require("express");
 import { Server } from "http";
-import CertificateProvider from "../certificate/CertificateProvider";
-import APIProvider from "./APIProvider";
-import ResponseFactory from "./ResponseFactory";
+import { CertificateProvider } from "../certificate/CertificateProvider";
+import { Logger } from "../shared/logger/Logger";
+import { APIProvider } from "./APIProvider";
+import { ResponseFactory } from "./ResponseFactory";
 
 /**
  * The {@link APIProvider} implementation for Express.
  */
-export default class ExpressAPIProvider implements APIProvider {
+export class ExpressAPIProvider implements APIProvider {
   private app: express.Application;
   private server: Server;
   private certificateProvider: CertificateProvider;
+  private logger: Logger;
 
   /**
    * Initializes the express server but does not start it.
@@ -28,8 +30,9 @@ export default class ExpressAPIProvider implements APIProvider {
    * which will be used by the APIProvider in order to get
    * the {@link RawCertificate} for the url provided.
    */
-  public init(certificateProvider: CertificateProvider): void {
+  public init(certificateProvider: CertificateProvider, logger: Logger): void {
     this.certificateProvider = certificateProvider;
+    this.logger = logger;
     this.configureAPI();
     this.startAPI();
   }
@@ -64,9 +67,17 @@ export default class ExpressAPIProvider implements APIProvider {
       const result = await this.certificateProvider.fetchCertificateByUrl(
         req.params.url
       );
-      response = await ResponseFactory.createResponse(result);
-    } catch (certificateError) {
-      response = ResponseFactory.createErrorResponse(certificateError);
+      response = ResponseFactory.createResponse(
+        result,
+        req.params.url,
+        this.logger
+      );
+    } catch (error) {
+      response = ResponseFactory.createErrorResponse(
+        error,
+        req.params.url,
+        this.logger
+      );
     }
     res.statusCode = response.statusCode;
     res.json(response.body);

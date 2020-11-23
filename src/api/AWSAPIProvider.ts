@@ -1,26 +1,29 @@
-import CertificateProvider from "../certificate/CertificateProvider";
-import APIProvider from "./APIProvider";
-import ResponseFactory from "./ResponseFactory";
+import { CertificateProvider } from "../certificate/CertificateProvider";
+import { Logger } from "../shared/logger/Logger";
+import { APIProvider } from "./APIProvider";
+import { ResponseFactory } from "./ResponseFactory";
 
 /**
  * The {@link APIProvider} implementation for AWS. This
  * provider has to be used by AWS-Lambda. The callback
  * function for lambda is {@link AWSAPIProvider.getCertificate}.
  */
-export default class AWSAPIProvider implements APIProvider {
+export class AWSAPIProvider implements APIProvider {
   /**
    * The certificate Provider which will be used to get the
    * {@link RawCertificate} for the url.
    */
   private certificateProvider: CertificateProvider;
+  private logger: Logger;
 
   public constructor() {
     this.certificateProvider = null;
     this.getCertificate = this.getCertificate.bind(this);
   }
 
-  public init(certificateProvider: CertificateProvider): void {
+  public init(certificateProvider: CertificateProvider, logger: Logger): void {
     this.certificateProvider = certificateProvider;
+    this.logger = logger;
   }
 
   /**
@@ -41,9 +44,13 @@ export default class AWSAPIProvider implements APIProvider {
     let response;
     try {
       const result = await this.certificateProvider.fetchCertificateByUrl(url);
-      response = await ResponseFactory.createResponse(result);
+      response = await ResponseFactory.createResponse(result, url, this.logger);
     } catch (certificateError) {
-      response = ResponseFactory.createErrorResponse(certificateError);
+      response = ResponseFactory.createErrorResponse(
+        certificateError,
+        url,
+        this.logger
+      );
     }
     return {
       cookies: [],

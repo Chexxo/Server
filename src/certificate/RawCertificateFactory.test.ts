@@ -1,8 +1,8 @@
-import RawCertificateFactory from "./RawCertificateFactory";
+import { RawCertificateFactory } from "./RawCertificateFactory";
 // eslint-disable-next-line jest/no-mocks-import
-import HTTPSMockResponse from "./__mocks__/HTTPSMockResponse";
+import { HTTPSMockResponse } from "./__mocks__/HTTPSMockResponse";
 // eslint-disable-next-line jest/no-mocks-import
-import TestCertificateStore from "./__mocks__/TestCertificateStore";
+import { TestCertificateStore } from "./__mocks__/TestCertificateStore";
 
 const res = new HTTPSMockResponse({});
 

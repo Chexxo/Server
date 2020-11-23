@@ -1,9 +1,9 @@
 import { IncomingMessage } from "http";
 import { RequestOptions } from "https";
-import NodeError from "../../types/errors/NodeError";
-import HTTPSMockResponse from "./HTTPSMockResponse";
+import { NodeError } from "../../types/errors/NodeError";
+import { HTTPSMockResponse } from "./HTTPSMockResponse";
 
-export default class HTTPSMockRequest {
+export class HTTPSMockRequest {
   constructor(
     readonly options: RequestOptions,
     readonly callback?: (res: IncomingMessage) => void

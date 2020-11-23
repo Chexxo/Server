@@ -1,8 +1,8 @@
 import { RequestOptions } from "https";
-import NodeError from "../../types/errors/NodeError";
-import TestCertificateStore from "./TestCertificateStore";
+import { NodeError } from "../../types/errors/NodeError";
+import { TestCertificateStore } from "./TestCertificateStore";
 
-export default class HTTPSMockResponse {
+export class HTTPSMockResponse {
   public statusCode = 200;
   public headers = {
     location: "",
