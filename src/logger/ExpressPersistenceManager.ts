@@ -51,8 +51,8 @@ export class ExpressPersistenceManager {
         }
 
         this.logRotate();
-        this.writeEntry(logEntry);
-        this.writeString(logEntryReadable);
+        this.writeLog(logEntry);
+        this.writeLogReadable(logEntryReadable);
       } catch (e) {
         const noLogEntryMessage = new LogEntry(
           LogLevel.WARNING,
@@ -73,7 +73,7 @@ export class ExpressPersistenceManager {
    * log file.
    * @param logEntry The log entry to be written.
    */
-  private writeEntry(logEntry: LogEntry) {
+  private writeLog(logEntry: LogEntry) {
     appendFileSync(
       this.config.logDir +
         ExpressPersistenceManager.getDatePrefix() +
@@ -88,7 +88,7 @@ export class ExpressPersistenceManager {
    * log file.
    * @param logEntry The string to be written.
    */
-  private writeString(logEntry: string) {
+  private writeLogReadable(logEntry: string) {
     appendFileSync(
       this.config.logDir +
         ExpressPersistenceManager.getDatePrefix() +
@@ -121,7 +121,6 @@ export class ExpressPersistenceManager {
         this.save(removedFileInfo);
       }
     });
-    return;
   }
 
   /**
