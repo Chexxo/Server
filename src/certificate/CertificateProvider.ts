@@ -75,12 +75,14 @@ export class CertificateProvider {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     res.on("data", function () {});
     res.on("end", () => {
+      const supportedRedirectStates = [301, 302, 303, 304, 305, 307, 308];
       if (res.statusCode >= 200 && res.statusCode <= 299) {
         resolve(RawCertificateFactory.getRawCertificateFromResponse(res));
-      } else if (res.statusCode === 301 || res.statusCode === 302) {
-        if (CertificateProvider.isSameSiteRedirect(url, res.headers.location)) {
-          resolve(RawCertificateFactory.getRawCertificateFromResponse(res));
-        }
+      } else if (
+        supportedRedirectStates.includes(res.statusCode) &&
+        CertificateProvider.isSameSiteRedirect(url, res.headers.location)
+      ) {
+        resolve(RawCertificateFactory.getRawCertificateFromResponse(res));
       }
       reject(new InvalidResponseError(UUIDFactory.uuidv4(), res.statusCode));
     });
