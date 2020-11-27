@@ -18,12 +18,13 @@ The code documentation is done in typedoc and can be viewed by looking into the 
 
 ## Express Provider
 In order to deploy the express variant of the server these steps have to be followed:
-1. Install the latest version of `Node.js` and `npm` on the system which should run the server.
+1. Install the latest version of `Node.js` and `npm` on the system which should run the server. As of now the minimum required `Node.js`-version is `12.19`.
 2. Download the express folder from the latest server release.
 3. Unzip the folder and open a terminal within the unzipped folder.
 4. Run `npm i`, this will install express.
 5. Run `node index.js` this will start the server on port 3000
-6. Test the server by opening a Browser and going to `http://localhost:3000/getCertificate/www.google.com`
+    - To define your own port run `PORT=<your-port> node index.js`.
+6. Test the server by opening a Browser and going to `http://localhost:3000/certificate/www.google.com`
     - The output should be a json including the certificate from www.google.com
 7. Go to the settings page of your Chrome-Chexxo-Extension and fill in the setting `server` with the value `localhost:3000`.
 8. You're all set to go. Start using Chexxo.
@@ -51,14 +52,14 @@ In order to deploy the server on AWS-Lambda these steps have to be followed:
 ![Open Gateway](img/8-open-gateway.jpg)
 11. On the left hand side of the gateway-configuration select `Routes`.
 ![Select Routes](img/9-select-routes.jpg)
-12. Click on `ANY` below the `/getCertificate` endpoint. Afterwards click on `Edit`.
+12. Click on `ANY` below the `/certificate` endpoint. Afterwards click on `Edit`.
 ![Select Any](img/10-select-any.jpg)
 13. Change `ANY` to `GET` and click `Save`.
 14. On the left hand side of the gateway-configuration select `Integrations`.
 ![Select Integrations](img/11-select-integrations.jpg)
 15. Select `$default` and click on `Edit Integration`.
 ![Select default](img/12-select-default.jpg)
-16. Select your Lambda function and click on `Save`. This has to be done even if the lambda-function is already selected.
+16. Make sure your function name is inside the `Lambda function` field and on `Save`. It is important, that you click on `Save` even if the function name was already correct.
 14. Congratulations your server is setup.
-15. Go to the settings page of your Chrome-Chexxo-Extension and fill in the setting `server` with the value of the API-Endpoint.
+15. Go to the settings page of your Chrome-Chexxo-Extension and fill in the setting `server` with the value of the API-Endpoint. Make sure to not include any subdirectories like `/default` into the settings value of the extension.
 ![Set endpoint](img/13-set-endpoint.jpg)

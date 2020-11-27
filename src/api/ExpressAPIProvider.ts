@@ -10,6 +10,7 @@ import { ResponseFactory } from "./ResponseFactory";
  * The {@link APIProvider} implementation for Express.
  */
 export class ExpressAPIProvider implements APIProvider {
+  private port: number;
   private app: express.Application;
   private server: Server;
   private certificateProvider: CertificateProvider;
@@ -18,14 +19,16 @@ export class ExpressAPIProvider implements APIProvider {
   /**
    * Initializes the express server but does not start it.
    */
-  public constructor() {
+  public constructor(port?: number) {
+    this.port = port || 3000;
     this.app = express();
     this.certificateProvider = null;
     this.getCertificate = this.getCertificate.bind(this);
   }
 
   /**
-   * Configures and starts the Express-Server on port 3000.
+   * Configures and starts the Express-Server on the
+   * defined port or port 3000 if no port has been provided.
    * @param certificateProvider The certificate provider
    * which will be used by the APIProvider in order to get
    * the {@link RawCertificate} for the url provided.
@@ -41,15 +44,16 @@ export class ExpressAPIProvider implements APIProvider {
    * Configures the endpoints of the express server.
    */
   private configureAPI(): void {
-    this.app.get("/getCertificate/:url", this.getCertificate);
+    this.app.get("/certificate/:url", this.getCertificate);
   }
 
   /**
-   * Starts the express server on port 3000.
+   * Starts the express server on the defined port or
+   * port 3000 if no port has been provided.
    */
   private startAPI(): void {
-    this.server = this.app.listen(3000, () => {
-      console.log("Server running on port 3000");
+    this.server = this.app.listen(this.port, () => {
+      console.log("Server running on port " + this.port);
     });
   }
 

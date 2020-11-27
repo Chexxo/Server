@@ -37,10 +37,10 @@ export class AWSAPIProvider implements APIProvider {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
   public async getCertificate(event: any): Promise<unknown | Error> {
     const path = event.rawPath.toLowerCase();
-    if (!path.includes("/getcertificate/")) {
+    if (!path.includes("/certificate/")) {
       throw Error();
     }
-    const url = path.replace("/getcertificate/", "");
+    const url = path.replace("/certificate/", "");
     let response;
     try {
       const result = await this.certificateProvider.fetchCertificateByUrl(url);
