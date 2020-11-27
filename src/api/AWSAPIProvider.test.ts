@@ -21,7 +21,7 @@ test("Unsupported endpoint", () => {
 test("Unexpected CertificateProvider error", () => {
   return apiProvider
     .getCertificate({
-      rawPath: "-/getcertificate/",
+      rawPath: "-/certificate/",
     })
     .catch((data: Error) => expect(data).toBeInstanceOf(Error));
 });
@@ -29,7 +29,7 @@ test("Unexpected CertificateProvider error", () => {
 test("Sunny case", () => {
   return apiProvider
     .getCertificate({
-      rawPath: "example.com/getcertificate/",
+      rawPath: "example.com/certificate/",
     })
     .then((data: { body: unknown }) =>
       expect(data.body).toBe('{"error":null,"certificate":"dadssadsa"}')

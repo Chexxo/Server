@@ -44,7 +44,7 @@ export class ExpressAPIProvider implements APIProvider {
    * Configures the endpoints of the express server.
    */
   private configureAPI(): void {
-    this.app.get("/getCertificate/:url", this.getCertificate);
+    this.app.get("/certificate/:url", this.getCertificate);
   }
 
   /**

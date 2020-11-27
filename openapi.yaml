@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: "Since Chromium based browsers do not provide an option to read the certificate from the webRequest-API, a server component is needed in order for Chexxo to function properly. Therefore we have written a simple Server which provides the extension with the certificate for the requested Webpage."
-  version: "1.1.0"
+  version: "2.0.0"
   title: "Chexxo Server"
   license:
     name: "MIT"
@@ -10,17 +10,17 @@ tags:
 - name: "certificate"
   description: "Obtain the certificate of a webpage"
 paths:
-  /getCertificate/{url}:
+  /certificate/{url}:
     get:
       tags:
       - "certificate"
       summary: "Get the certificate of the provided domain"
-      description: ""
+      description: "Takes the url of the domain and returns the respective certificate."
       operationId: "getCertificate"
       parameters:
       - name: "url"
         in: "path"
-        description: "The url of the domain"
+        description: "The url of the domain. This needs to be a clean url without a query-string or a bookmark."
         required: true
         schema:
           type: "string"
