@@ -18,7 +18,7 @@ The code documentation is done in typedoc and can be viewed by looking into the 
 
 ## Express Provider
 In order to deploy the express variant of the server these steps have to be followed:
-1. Install the latest version of `Node.js` and `npm` on the system which should run the server.
+1. Install the latest version of `Node.js` and `npm` on the system which should run the server. As of now the minimum required `Node.js`-version is `12.19`.
 2. Download the express folder from the latest server release.
 3. Unzip the folder and open a terminal within the unzipped folder.
 4. Run `npm i`, this will install express.
