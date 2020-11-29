@@ -34,10 +34,14 @@ export class AWSAPIProvider implements APIProvider {
    * if no endpoint could be applied. Returning an error leads
    * to AWS returning a server error by itself.
    */
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-  public async getCertificate(event: any): Promise<unknown | Error> {
+  public async getCertificate(
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+    event: any,
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+    context: any
+  ): Promise<unknown | Error> {
     const path = event.rawPath.toLowerCase();
-    const requestUuid = event.requestContext.requestId;
+    const requestUuid = context.awsRequestId;
 
     if (!path.includes("/certificate/")) {
       throw Error();

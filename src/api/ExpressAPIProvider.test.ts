@@ -29,6 +29,15 @@ const app = {
   get: jest.fn(),
 };
 
+const consoleSave = global.console;
+beforeAll(() => {
+  global.console = <Console>(<unknown>{
+    log: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  });
+});
+
 beforeEach(() => {
   apiProvider = new ExpressAPIProvider();
   apiProvider["app"] = <Application>(<unknown>app);
@@ -120,4 +129,21 @@ test("Closes server", () => {
   );
   apiProvider.close();
   expect(close).toHaveBeenCalled();
+});
+
+test("Returns correct start message", () => {
+  apiProvider = new ExpressAPIProvider(8080);
+  apiProvider["app"] = <Application>(<unknown>app);
+  apiProvider["certificateProvider"] = new CertificateProvider();
+  apiProvider.init(
+    new CertificateProvider(),
+    new Logger(
+      new ExpressPersistenceManager(new ExpressPersistenceManagerConfig())
+    )
+  );
+  expect(console.log).toHaveBeenLastCalledWith(expect.stringMatching(/8080/));
+});
+
+afterAll(() => {
+  global.console = consoleSave;
 });

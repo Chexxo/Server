@@ -12,34 +12,40 @@ beforeEach(() => {
 
 test("Unsupported endpoint", () => {
   return apiProvider
-    .getCertificate({
-      rawPath: "www.google.com/",
-      requestContext: {
-        requestId: "abc123",
+    .getCertificate(
+      {
+        rawPath: "www.google.com/",
       },
-    })
+      {
+        awsRequestId: "abc123",
+      }
+    )
     .catch((data: Error) => expect(data).toBeInstanceOf(Error));
 });
 
 test("Unexpected CertificateProvider error", () => {
   return apiProvider
-    .getCertificate({
-      rawPath: "-/certificate/",
-      requestContext: {
-        requestId: "abc123",
+    .getCertificate(
+      {
+        rawPath: "-/certificate/",
       },
-    })
+      {
+        awsRequestId: "abc123",
+      }
+    )
     .catch((data: Error) => expect(data).toBeInstanceOf(Error));
 });
 
 test("Sunny case", () => {
   return apiProvider
-    .getCertificate({
-      rawPath: "example.com/certificate/",
-      requestContext: {
-        requestId: "abc123",
+    .getCertificate(
+      {
+        rawPath: "example.com/certificate/",
       },
-    })
+      {
+        awsRequestId: "abc123",
+      }
+    )
     .then((data: { body: unknown }) =>
       expect(data.body).toBe(
         '{"requestUuid":"abc123","error":null,"certificate":"dadssadsa"}'
