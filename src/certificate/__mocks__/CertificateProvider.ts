@@ -8,13 +8,13 @@ export class CertificateProvider {
     return new Promise((resolve, reject) => {
       switch (url) {
         case "invalid.status.example.com":
-          reject(new InvalidResponseError(UUIDFactory.uuidv4(), 301));
+          reject(new InvalidResponseError(301));
         case "unexpected.example.com":
           reject(new Error());
         case "example.com":
           resolve(new RawCertificate("dadssadsa"));
         default:
-          reject(new ServerError(UUIDFactory.uuidv4(), new Error()));
+          reject(new ServerError(new Error()));
       }
     });
   }
