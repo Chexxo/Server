@@ -31,12 +31,12 @@ beforeEach(() => {
   requestUuid = UUIDFactory.uuidv4();
 });
 
-test("Takes uuid from error", () => {
+test("Takes uuid from request", () => {
   const logEntry = new LogEntry(
     LogLevel.ERROR,
     Date.now(),
     "Hello",
-    new ConnectionRefusedError("abc123")
+    new ConnectionRefusedError()
   );
   persistence.save("abc123", logEntry);
   expect(global.console.error).toHaveBeenLastCalledWith(

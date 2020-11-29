@@ -5,7 +5,8 @@
     "module": "CommonJS",
     "target": "esnext",
     "allowJs": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "esModuleInterop": true,
   },
   "include": ["src/**/*"]
 }

@@ -1,5 +1,4 @@
-import { Request, Response, Application } from "express";
-import express = require("express");
+import e, { Request, Response, Application } from "express";
 import { Server } from "http";
 import { CertificateProvider } from "../certificate/CertificateProvider";
 import { UUIDFactory } from "../helpers/UUIDFactory";
@@ -12,7 +11,7 @@ import { ResponseFactory } from "./ResponseFactory";
  */
 export class ExpressAPIProvider implements APIProvider {
   private port: number;
-  private app: express.Application;
+  private app: Application;
   private server: Server;
   private certificateProvider: CertificateProvider;
   private logger: Logger;
@@ -22,7 +21,7 @@ export class ExpressAPIProvider implements APIProvider {
    */
   public constructor(port?: number) {
     this.port = port || 3000;
-    this.app = express();
+    this.app = e();
     this.certificateProvider = null;
     this.getCertificate = this.getCertificate.bind(this);
   }

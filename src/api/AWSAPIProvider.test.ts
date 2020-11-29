@@ -14,6 +14,9 @@ test("Unsupported endpoint", () => {
   return apiProvider
     .getCertificate({
       rawPath: "www.google.com/",
+      requestContext: {
+        requestId: "abc123",
+      },
     })
     .catch((data: Error) => expect(data).toBeInstanceOf(Error));
 });
@@ -22,6 +25,9 @@ test("Unexpected CertificateProvider error", () => {
   return apiProvider
     .getCertificate({
       rawPath: "-/certificate/",
+      requestContext: {
+        requestId: "abc123",
+      },
     })
     .catch((data: Error) => expect(data).toBeInstanceOf(Error));
 });
