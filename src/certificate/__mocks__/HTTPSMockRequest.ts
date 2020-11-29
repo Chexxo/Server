@@ -1,3 +1,4 @@
+import { TIMEOUT } from "dns";
 import { IncomingMessage } from "http";
 import { RequestOptions } from "https";
 import { NodeError } from "../../types/errors/NodeError";
@@ -8,6 +9,8 @@ export class HTTPSMockRequest {
     readonly options: RequestOptions,
     readonly callback?: (res: IncomingMessage) => void
   ) {}
+
+  public destroy = jest.fn();
 
   public on = jest.fn().mockImplementation((event, cb) => {
     switch (event) {
@@ -22,11 +25,18 @@ export class HTTPSMockRequest {
             error.code = "ECONNREFUSED";
             cb(error);
             break;
-          case "--":
+          case "unexpected.error.example.com":
             error.code = "--";
             cb(error);
             break;
         }
+        break;
+      case "socket":
+        cb({
+          on: jest.fn((event, cb) => {
+            cb();
+          }),
+        });
         break;
       default:
         cb();

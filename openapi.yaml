@@ -74,6 +74,8 @@ components:
         - 501
         - 502
         - 503
+        - 504
+        - 505
       description: >
         The code of the error which occured.
         Error:
@@ -81,3 +83,5 @@ components:
          * `501` - The host refused to open a connection.
          * `502` - Server responded with unsupported statuscode.
          * `503` - No host could be found with the domain provided.
+         * `504` - No route to host.
+         * `505` - The url provided is not valid.

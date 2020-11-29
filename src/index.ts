@@ -16,7 +16,7 @@ const logger = new Logger(
 
 const server = new ChexxoServer(
   new ExpressAPIProvider(port),
-  new CertificateProvider(),
+  new CertificateProvider(3000),
   logger
 );
 

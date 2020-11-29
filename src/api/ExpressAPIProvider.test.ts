@@ -41,7 +41,7 @@ beforeAll(() => {
 beforeEach(() => {
   apiProvider = new ExpressAPIProvider();
   apiProvider["app"] = <Application>(<unknown>app);
-  apiProvider["certificateProvider"] = new CertificateProvider();
+  apiProvider["certificateProvider"] = new CertificateProvider(3000);
   response.json = jest.fn();
 });
 
@@ -86,7 +86,7 @@ test("Supported url data", () => {
 
 test("Has correct endpoint", () => {
   apiProvider.init(
-    new CertificateProvider(),
+    new CertificateProvider(3000),
     new Logger(
       new ExpressPersistenceManager(new ExpressPersistenceManagerConfig())
     )
@@ -99,7 +99,7 @@ test("Has correct endpoint", () => {
 
 test("Has correct default port", () => {
   apiProvider.init(
-    new CertificateProvider(),
+    new CertificateProvider(3000),
     new Logger(
       new ExpressPersistenceManager(new ExpressPersistenceManagerConfig())
     )
@@ -110,9 +110,8 @@ test("Has correct default port", () => {
 test("Changes port", () => {
   apiProvider = new ExpressAPIProvider(8080);
   apiProvider["app"] = <Application>(<unknown>app);
-  apiProvider["certificateProvider"] = new CertificateProvider();
   apiProvider.init(
-    new CertificateProvider(),
+    new CertificateProvider(3000),
     new Logger(
       new ExpressPersistenceManager(new ExpressPersistenceManagerConfig())
     )
@@ -122,7 +121,7 @@ test("Changes port", () => {
 
 test("Closes server", () => {
   apiProvider.init(
-    new CertificateProvider(),
+    new CertificateProvider(3000),
     new Logger(
       new ExpressPersistenceManager(new ExpressPersistenceManagerConfig())
     )
@@ -134,9 +133,8 @@ test("Closes server", () => {
 test("Returns correct start message", () => {
   apiProvider = new ExpressAPIProvider(8080);
   apiProvider["app"] = <Application>(<unknown>app);
-  apiProvider["certificateProvider"] = new CertificateProvider();
   apiProvider.init(
-    new CertificateProvider(),
+    new CertificateProvider(800),
     new Logger(
       new ExpressPersistenceManager(new ExpressPersistenceManagerConfig())
     )

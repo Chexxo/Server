@@ -21,7 +21,7 @@ In order to deploy the express variant of the server these steps have to be foll
 1. Install the latest version of `Node.js` and `npm` on the system which should run the server. As of now the minimum required `Node.js`-version is `12.19`.
 2. Download the express folder from the latest server release.
 3. Unzip the folder and open a terminal within the unzipped folder.
-4. Run `npm i`, this will install express.
+4. Run `npm i`, this will install the dependencies.
 5. Run `node index.js` this will start the server on port 3000
     - To define your own port run `PORT=<your-port> node index.js`.
 6. Test the server by opening a Browser and going to `http://localhost:3000/certificate/www.google.com`

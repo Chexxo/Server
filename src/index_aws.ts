@@ -6,7 +6,11 @@ import { Logger } from "./shared/logger/Logger";
 
 const logger = new Logger(new AWSPersistenceManager());
 const awsProvider = new AWSAPIProvider();
-const server = new ChexxoServer(awsProvider, new CertificateProvider(), logger);
+const server = new ChexxoServer(
+  awsProvider,
+  new CertificateProvider(500),
+  logger
+);
 server.init();
 
 export const handler = awsProvider.getCertificate;
