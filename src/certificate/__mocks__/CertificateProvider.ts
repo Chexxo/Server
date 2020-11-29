@@ -1,4 +1,3 @@
-import { UUIDFactory } from "../../helpers/UUIDFactory";
 import { RawCertificate } from "../../shared/types/certificate/RawCertificate";
 import { InvalidResponseError } from "../../shared/types/errors/InvalidResponseError";
 import { ServerError } from "../../shared/types/errors/ServerError";
