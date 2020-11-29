@@ -1,6 +1,5 @@
 import { LogEntry } from "../shared/types/logger/LogEntry";
 import { LogLevel } from "../shared/logger/Logger";
-import { UUIDFactory } from "../helpers/UUIDFactory";
 import {
   appendFileSync,
   existsSync,
