@@ -31,7 +31,7 @@ beforeEach(() => {
   requestUuid = UUIDFactory.uuidv4();
 });
 
-test("Takes uuid from request", () => {
+test("Does not contain uuid from request", () => {
   const logEntry = new LogEntry(
     LogLevel.ERROR,
     Date.now(),
@@ -40,7 +40,7 @@ test("Takes uuid from request", () => {
   );
   persistence.save("abc123", logEntry);
   expect(global.console.error).toHaveBeenLastCalledWith(
-    expect.stringMatching(/\[abc123\]/)
+    expect.not.stringMatching(/\[abc123\]/)
   );
 });
 

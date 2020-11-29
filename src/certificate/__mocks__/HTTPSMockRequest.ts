@@ -1,4 +1,3 @@
-import { TIMEOUT } from "dns";
 import { IncomingMessage } from "http";
 import { RequestOptions } from "https";
 import { NodeError } from "../../types/errors/NodeError";
