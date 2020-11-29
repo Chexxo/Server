@@ -1,3 +1,4 @@
+import { UUIDFactory } from "../helpers/UUIDFactory";
 import { LogLevel } from "../shared/logger/Logger";
 import { ConnectionRefusedError } from "../shared/types/errors/ConnectionRefusedError";
 import { LogEntry } from "../shared/types/logger/LogEntry";
@@ -16,12 +17,18 @@ const logEntryError = new LogEntry(LogLevel.ERROR, Date.now(), "Hello Error!");
 const consoleSave = global.console;
 
 beforeAll(() => {
-  global.console = <Console>(<unknown>{ log: jest.fn() });
+  global.console = <Console>(<unknown>{
+    log: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  });
 });
 
+let requestUuid: string;
 beforeEach(() => {
   jest.resetAllMocks();
   persistence = new AWSPersistenceManager();
+  requestUuid = UUIDFactory.uuidv4();
 });
 
 test("Takes uuid from error", () => {
@@ -31,29 +38,29 @@ test("Takes uuid from error", () => {
     "Hello",
     new ConnectionRefusedError("abc123")
   );
-  persistence.save(logEntry);
-  expect(global.console.log).toHaveBeenLastCalledWith(
+  persistence.save("abc123", logEntry);
+  expect(global.console.error).toHaveBeenLastCalledWith(
     expect.stringMatching(/\[abc123\]/)
   );
 });
 
 test("Writes info to console", () => {
-  persistence.save(logEntryInfo);
+  persistence.save(requestUuid, logEntryInfo);
   expect(global.console.log).toHaveBeenLastCalledWith(
     expect.stringMatching(/Hello Info!/)
   );
 });
 
 test("Writes warning to console", () => {
-  persistence.save(logEntryWarning);
-  expect(global.console.log).toHaveBeenLastCalledWith(
+  persistence.save(requestUuid, logEntryWarning);
+  expect(global.console.warn).toHaveBeenLastCalledWith(
     expect.stringMatching(/Hello Warning!/)
   );
 });
 
 test("Writes error to console", () => {
-  persistence.save(logEntryError);
-  expect(global.console.log).toHaveBeenLastCalledWith(
+  persistence.save(requestUuid, logEntryError);
+  expect(global.console.error).toHaveBeenLastCalledWith(
     expect.stringMatching(/Hello Error!/)
   );
 });

@@ -30,8 +30,13 @@ test("Sunny case", () => {
   return apiProvider
     .getCertificate({
       rawPath: "example.com/certificate/",
+      requestContext: {
+        requestId: "abc123",
+      },
     })
     .then((data: { body: unknown }) =>
-      expect(data.body).toBe('{"error":null,"certificate":"dadssadsa"}')
+      expect(data.body).toBe(
+        '{"requestUuid":"abc123","error":null,"certificate":"dadssadsa"}'
+      )
     );
 });

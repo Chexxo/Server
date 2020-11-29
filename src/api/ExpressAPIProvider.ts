@@ -2,6 +2,7 @@ import { Request, Response, Application } from "express";
 import express = require("express");
 import { Server } from "http";
 import { CertificateProvider } from "../certificate/CertificateProvider";
+import { UUIDFactory } from "../helpers/UUIDFactory";
 import { Logger } from "../shared/logger/Logger";
 import { APIProvider } from "./APIProvider";
 import { ResponseFactory } from "./ResponseFactory";
@@ -67,17 +68,21 @@ export class ExpressAPIProvider implements APIProvider {
    */
   private async getCertificate(req: Request, res: Response) {
     let response;
+    const requestUuid = UUIDFactory.uuidv4();
+
     try {
       const result = await this.certificateProvider.fetchCertificateByUrl(
         req.params.url
       );
       response = ResponseFactory.createResponse(
+        requestUuid,
         result,
         req.params.url,
         this.logger
       );
     } catch (error) {
       response = ResponseFactory.createErrorResponse(
+        requestUuid,
         error,
         req.params.url,
         this.logger

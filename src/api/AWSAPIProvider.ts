@@ -37,6 +37,8 @@ export class AWSAPIProvider implements APIProvider {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
   public async getCertificate(event: any): Promise<unknown | Error> {
     const path = event.rawPath.toLowerCase();
+    const requestUuid = event.requestContext.requestId;
+
     if (!path.includes("/certificate/")) {
       throw Error();
     }
@@ -44,9 +46,15 @@ export class AWSAPIProvider implements APIProvider {
     let response;
     try {
       const result = await this.certificateProvider.fetchCertificateByUrl(url);
-      response = await ResponseFactory.createResponse(result, url, this.logger);
+      response = await ResponseFactory.createResponse(
+        requestUuid,
+        result,
+        url,
+        this.logger
+      );
     } catch (certificateError) {
       response = ResponseFactory.createErrorResponse(
+        requestUuid,
         certificateError,
         url,
         this.logger

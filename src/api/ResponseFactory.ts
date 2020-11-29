@@ -1,4 +1,3 @@
-import { UUIDFactory } from "../helpers/UUIDFactory";
 import { Logger, LogLevel } from "../shared/logger/Logger";
 import { APIResponse } from "../shared/types/api/APIResponse";
 import { APIResponseBody } from "../shared/types/api/APIResponseBody";
@@ -13,6 +12,9 @@ import { ServerError } from "../shared/types/errors/ServerError";
 export abstract class ResponseFactory {
   /**
    * Creates an {@link APIResponse} with status `200`.
+   *
+   * @param uuid The uuid of the request that lead to
+   * this response.
    * @param rawCert The certificate which should
    * be included into the {@link APIResponse}.
    * @param url The url which was called in order to
@@ -24,19 +26,23 @@ export abstract class ResponseFactory {
    * returned by the {@link APIProvider}.
    */
   public static createResponse(
+    uuid: string,
     rawCert: RawCertificate,
     url = "",
     logger?: Logger
   ): APIResponse {
     if (logger) {
-      logger.log(LogLevel.INFO, `Request: ${url} Response: 200 ok`);
+      logger.log(uuid, LogLevel.INFO, `Request: ${url} Response: 200 ok`);
     }
-    const responseBody = new APIResponseBody(null, rawCert.pem);
+    const responseBody = new APIResponseBody(uuid, null, rawCert.pem);
     return new APIResponse(200, responseBody);
   }
 
   /**
    * Creates an {@link APIResponse} with status `500`.
+   *
+   * @param uuid The uuid of the request that lead to
+   * this response.
    * @param error The error which should
    * be included into the {@link APIResponse}.
    * @param url The url which was called in order to
@@ -48,6 +54,7 @@ export abstract class ResponseFactory {
    * returned by the {@link APIProvider}.
    */
   public static createErrorResponse(
+    uuid: string,
     e: Error,
     url = "",
     logger?: Logger
@@ -55,18 +62,20 @@ export abstract class ResponseFactory {
     let error = <CodedError>e;
 
     if (!(e instanceof CodedError)) {
-      error = new ServerError(UUIDFactory.uuidv4(), e);
+      error = new ServerError(e);
     }
 
     if (logger) {
       if (error instanceof ServerError) {
         logger.log(
+          uuid,
           LogLevel.ERROR,
           `Request: ${url} Response: ${error.message}`,
           error
         );
       } else {
         logger.log(
+          uuid,
           LogLevel.WARNING,
           `Request: ${url} Response: ${error.message}`,
           error
@@ -75,7 +84,8 @@ export abstract class ResponseFactory {
     }
 
     const responseBody = new APIResponseBody(
-      new APIResponseError(error.uuid, error.code, error.publicMessage),
+      uuid,
+      new APIResponseError(error.code, error.publicMessage),
       null
     );
 

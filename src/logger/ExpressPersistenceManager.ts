@@ -10,13 +10,14 @@ import {
 } from "fs";
 import { ExpressPersistenceManagerConfig } from "./ExpressPersistenceManagerConfig";
 import { LogFactory } from "../shared/logger/LogFactory";
+import { LoggerPersistenceManager } from "../shared/logger/LoggerPersistenceManager";
 
 /**
  * Class to persist logs when using Express. The logs
  * are written into the log subfolder and also conveyed to
  * the console.
  */
-export class ExpressPersistenceManager {
+export class ExpressPersistenceManager implements LoggerPersistenceManager {
   private static millisecondsADay = 86_400_000;
 
   /**
@@ -32,25 +33,31 @@ export class ExpressPersistenceManager {
    * the log will be written to the console and a logfile or just to the
    * console.
    *
+   * @param uuid The uuid of the request which lead to this entry.
    * @param logEntry The log entry to be persisted.
    */
-  public save(logEntry: LogEntry): void {
-    let uuid = null;
-    if (logEntry.error) {
-      uuid = logEntry.error.uuid;
-    } else if (logEntry.logLevel < LogLevel.INFO) {
-      uuid = UUIDFactory.uuidv4();
+  public save(uuid: string, logEntry: LogEntry): void {
+    const logEntryReadable = LogFactory.formatLogEntry(uuid, logEntry);
+    let logFunction;
+    switch (logEntry.logLevel) {
+      case LogLevel.WARNING:
+        logFunction = console.warn;
+        break;
+      case LogLevel.INFO:
+        logFunction = console.log;
+        break;
+      default:
+        logFunction = console.error;
     }
+    logFunction(logEntryReadable);
 
-    const logEntryReadable = LogFactory.formatLogEntry(logEntry, uuid);
-    console.log(logEntryReadable);
     if (logEntry.logLevel < LogLevel.INFO) {
       try {
         if (!existsSync(this.config.logDir)) {
           mkdirSync(this.config.logDir);
         }
 
-        this.logRotate();
+        this.logRotate(uuid);
         this.writeLog(logEntry);
         this.writeLogReadable(logEntryReadable);
       } catch (e) {
@@ -60,8 +67,8 @@ export class ExpressPersistenceManager {
           "Log could not be persisted."
         );
         const noLogEntryMessageReadable = LogFactory.formatLogEntry(
-          noLogEntryMessage,
-          UUIDFactory.uuidv4()
+          uuid,
+          noLogEntryMessage
         );
         console.log(noLogEntryMessageReadable);
       }
@@ -101,8 +108,10 @@ export class ExpressPersistenceManager {
   /**
    * Removes expired log files according to the
    * configuration provided in the {@link ExpressPersistenceManagerConfig}.
+   *
+   * @param uuid The uuid of the request which lead to this rotate.
    */
-  private logRotate(): void {
+  private logRotate(uuid: string): void {
     const files = readdirSync(this.config.logDir);
     const deadline =
       Date.parse(ExpressPersistenceManager.getDatePrefix()) -
@@ -118,7 +127,7 @@ export class ExpressPersistenceManager {
           Date.now(),
           "Logrotate: " + this.config.logDir + file + " has been removed."
         );
-        this.save(removedFileInfo);
+        this.save(uuid, removedFileInfo);
       }
     });
   }

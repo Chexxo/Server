@@ -1,7 +1,6 @@
 import { request, Agent } from "https";
 import { parse as parseUrl } from "url";
 import { ErrorFactory } from "../errors/ErrorFactory";
-import { UUIDFactory } from "../helpers/UUIDFactory";
 import { RawCertificate } from "../shared/types/certificate/RawCertificate";
 import { InvalidResponseError } from "../shared/types/errors/InvalidResponseError";
 import { NodeError } from "../types/errors/NodeError";
@@ -84,7 +83,7 @@ export class CertificateProvider {
       ) {
         resolve(RawCertificateFactory.getRawCertificateFromResponse(res));
       }
-      reject(new InvalidResponseError(UUIDFactory.uuidv4(), res.statusCode));
+      reject(new InvalidResponseError(res.statusCode));
     });
   }
 
