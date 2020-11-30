@@ -28,6 +28,10 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
    * the log will be written to the console and a logfile or just to the
    * console.
    *
+   * Be aware that this function is not awaited by the parent and therefore
+   * some logs might not be persisted to file if the express server is
+   * shutdown whilst requests are still coming in.
+   *
    * @param uuid The uuid of the request which lead to this entry.
    * @param logEntry The log entry to be persisted.
    */
@@ -47,7 +51,6 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
     logFunction(logEntryReadable);
 
     if (logEntry.logLevel < LogLevel.INFO) {
-      // Is not awaited in order to not block the request.
       await this.persist(uuid, logEntry, logEntryReadable);
     }
   }

@@ -1,5 +1,3 @@
-import e = require("express");
-import { promises } from "fs";
 import path = require("path");
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fs = <any>jest.createMockFromModule("fs");
