@@ -63,3 +63,13 @@ In order to deploy the server on AWS-Lambda these steps have to be followed:
 14. Congratulations your server is setup.
 15. Go to the settings page of your Chrome-Chexxo-Extension and fill in the setting `server` with the value of the API-Endpoint. Make sure to not include any subdirectories like `/default` into the settings value of the extension.
 ![Set endpoint](img/13-set-endpoint.jpg)
+
+# FAQ
+## I get a `No route to host` error all the time.
+There are multiple reasons why this can happen. One of them being that the server runs into the request timeout defined by chexxo.
+
+The Timeout it set to:
+ - AWS:     500ms
+ - Express: 3000ms
+
+ In order to adjust the timeout open your servers `index.js` and adjust the number gives as a parameter to the `CertificateProvider`. Be aware that this timeout is only used by us in order to shorten the maximum request time. It does not overwrite options inside the http agent.

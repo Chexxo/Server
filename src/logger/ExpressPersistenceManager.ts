@@ -1,15 +1,10 @@
 import { LogEntry } from "../shared/types/logger/LogEntry";
 import { LogLevel } from "../shared/logger/Logger";
-import {
-  appendFileSync,
-  existsSync,
-  mkdirSync,
-  readdirSync,
-  unlinkSync,
-} from "fs";
 import { ExpressPersistenceManagerConfig } from "./ExpressPersistenceManagerConfig";
 import { LogFactory } from "../shared/logger/LogFactory";
 import { LoggerPersistenceManager } from "../shared/logger/LoggerPersistenceManager";
+// eslint-disable-next-line import/no-unresolved
+import { promises } from "fs";
 
 /**
  * Class to persist logs when using Express. The logs
@@ -18,6 +13,7 @@ import { LoggerPersistenceManager } from "../shared/logger/LoggerPersistenceMana
  */
 export class ExpressPersistenceManager implements LoggerPersistenceManager {
   private static millisecondsADay = 86_400_000;
+  private logRotateTime = 0;
 
   /**
    * Constructs a persistence manager with the configuration
@@ -35,7 +31,7 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
    * @param uuid The uuid of the request which lead to this entry.
    * @param logEntry The log entry to be persisted.
    */
-  public save(uuid: string, logEntry: LogEntry): void {
+  public async save(uuid: string, logEntry: LogEntry): Promise<void> {
     const logEntryReadable = LogFactory.formatLogEntry(uuid, logEntry);
     let logFunction;
     switch (logEntry.logLevel) {
@@ -51,26 +47,52 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
     logFunction(logEntryReadable);
 
     if (logEntry.logLevel < LogLevel.INFO) {
-      try {
-        if (!existsSync(this.config.logDir)) {
-          mkdirSync(this.config.logDir);
-        }
+      // Is not awaited in order to not block the request.
+      await this.persist(uuid, logEntry, logEntryReadable);
+    }
+  }
 
-        this.logRotate(uuid);
-        this.writeLog(logEntry);
-        this.writeLogReadable(logEntryReadable);
+  /**
+   * Persists the given values on a log file on disk.
+   * Also calls logrotate if necessary.
+   *
+   * @param uuid The uuid of the request.
+   * @param logEntry The log entry to be persistet.
+   * @param logEntryReadable The human readable
+   * version of the log entry.
+   */
+  private async persist(
+    uuid: string,
+    logEntry: LogEntry,
+    logEntryReadable: string
+  ) {
+    try {
+      try {
+        await promises.mkdir(this.config.logDir);
       } catch (e) {
-        const noLogEntryMessage = new LogEntry(
-          LogLevel.WARNING,
-          Date.now(),
-          "Log could not be persisted."
-        );
-        const noLogEntryMessageReadable = LogFactory.formatLogEntry(
-          uuid,
-          noLogEntryMessage
-        );
-        console.log(noLogEntryMessageReadable);
+        if (e.code !== "EEXIST") {
+          throw e;
+        }
       }
+
+      const yesterday = Date.now() - ExpressPersistenceManager.millisecondsADay;
+      if (this.logRotateTime < yesterday) {
+        await this.logRotate(uuid);
+        this.logRotateTime = Date.now();
+      }
+      this.writeLog(logEntry);
+      this.writeLogReadable(logEntryReadable);
+    } catch (e) {
+      const noLogEntryMessage = new LogEntry(
+        LogLevel.WARNING,
+        Date.now(),
+        "Log could not be persisted."
+      );
+      const noLogEntryMessageReadable = LogFactory.formatLogEntry(
+        uuid,
+        noLogEntryMessage
+      );
+      console.warn(noLogEntryMessageReadable);
     }
   }
 
@@ -79,8 +101,8 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
    * log file.
    * @param logEntry The log entry to be written.
    */
-  private writeLog(logEntry: LogEntry) {
-    appendFileSync(
+  private async writeLog(logEntry: LogEntry) {
+    await promises.appendFile(
       this.config.logDir +
         ExpressPersistenceManager.getDatePrefix() +
         "_" +
@@ -94,8 +116,8 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
    * log file.
    * @param logEntry The string to be written.
    */
-  private writeLogReadable(logEntry: string) {
-    appendFileSync(
+  private async writeLogReadable(logEntry: string) {
+    await promises.appendFile(
       this.config.logDir +
         ExpressPersistenceManager.getDatePrefix() +
         "_" +
@@ -110,17 +132,17 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
    *
    * @param uuid The uuid of the request which lead to this rotate.
    */
-  private logRotate(uuid: string): void {
-    const files = readdirSync(this.config.logDir);
+  private async logRotate(uuid: string): Promise<void> {
+    const files = await promises.readdir(this.config.logDir);
     const deadline =
       Date.parse(ExpressPersistenceManager.getDatePrefix()) -
       this.config.logDays * ExpressPersistenceManager.millisecondsADay;
-    files.forEach((file) => {
+    files.forEach(async (file) => {
       const millisecondTimestamp = ExpressPersistenceManager.getTimestampFromFilename(
         file
       );
       if (millisecondTimestamp !== null && millisecondTimestamp <= deadline) {
-        unlinkSync(this.config.logDir + file);
+        await promises.unlink(this.config.logDir + file);
         const removedFileInfo = new LogEntry(
           LogLevel.INFO,
           Date.now(),
