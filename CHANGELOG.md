@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Bug which was preventing the fetching of certificates with redirect codes other than `301` or `302`.
 
-## [1.1.0] - 2020-11-22
+## [1.1.0] - 2020-11-23
 ### Added
 - Add logging functionality.
 - Add uuid to APIResponseError in order to allow log correlation.
@@ -43,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Adjusted openapi.yaml to represent all available fields.
 
-## [1.0.1] - 2020-11-18
+## [1.0.1] - 2020-11-19
 ### Changed
 - Improve CI for better usage of limited GitHub space.
 
