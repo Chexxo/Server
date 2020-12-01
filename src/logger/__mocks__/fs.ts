@@ -18,27 +18,31 @@ function __setMockFiles(newMockFiles: string[]) {
   }
 }
 
-// A custom version of `readdirSync` that reads from the special mocked out
-// file list set via __setMockFiles
-function readdirSync(directoryPath: string): string[] {
-  if (directoryPath === "./errorPath/") {
-    throw new Error();
-  }
-  return mockFiles[directoryPath] || [];
-}
-
-function existsSync(dir: string): boolean {
-  if (dir === "./nolog/") {
-    return false;
-  }
-  return true;
-}
+fs.promises = {
+  mkdirMock: jest.fn(),
+  readdir: (directoryPath: string): string[] => {
+    if (directoryPath === "./errorPath/") {
+      throw new Error();
+    }
+    return mockFiles[directoryPath] || [];
+  },
+  mkdir: (directoryPath: string) => {
+    fs.promises.mkdirMock(directoryPath);
+    if (directoryPath === "./errorPath/mkdir/") {
+      console.error("Hello1");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const e = <any>new Error();
+      e.code = "EEXIST";
+      throw e;
+    } else if (directoryPath === "./errorPath/mkdir/other/") {
+      console.error("Hello2");
+      throw new Error();
+    }
+  },
+  appendFile: jest.fn(),
+  unlink: jest.fn(),
+};
 
 fs.__setMockFiles = __setMockFiles;
-fs.readdirSync = readdirSync;
-fs.existsSync = existsSync;
-fs.mkdirSync = jest.fn();
-fs.appendFileSync = jest.fn();
-fs.unlinkSync = jest.fn();
 
 module.exports = fs;

@@ -21,7 +21,7 @@ In order to deploy the express variant of the server these steps have to be foll
 1. Install the latest version of `Node.js` and `npm` on the system which should run the server. As of now the minimum required `Node.js`-version is `12.19`.
 2. Download the express folder from the latest server release.
 3. Unzip the folder and open a terminal within the unzipped folder.
-4. Run `npm i`, this will install express.
+4. Run `npm i`, this will install the dependencies.
 5. Run `node index.js` this will start the server on port 3000
     - To define your own port run `PORT=<your-port> node index.js`.
 6. Test the server by opening a Browser and going to `http://localhost:3000/certificate/www.google.com`
@@ -63,3 +63,13 @@ In order to deploy the server on AWS-Lambda these steps have to be followed:
 14. Congratulations your server is setup.
 15. Go to the settings page of your Chrome-Chexxo-Extension and fill in the setting `server` with the value of the API-Endpoint. Make sure to not include any subdirectories like `/default` into the settings value of the extension.
 ![Set endpoint](img/13-set-endpoint.jpg)
+
+# FAQ
+## I get a `No route to host` error all the time.
+There are multiple reasons why this can happen. One of them being that the server runs into the request timeout defined by chexxo.
+
+The Timeout it set to:
+ - AWS:     500ms
+ - Express: 3000ms
+
+ In order to adjust the timeout open your servers `index.js` and adjust the number gives as a parameter to the `CertificateProvider`. Be aware that this timeout is only used by us in order to shorten the maximum request time. It does not overwrite options inside the http agent.

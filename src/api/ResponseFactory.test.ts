@@ -5,15 +5,24 @@ import { InvalidResponseError } from "../shared/types/errors/InvalidResponseErro
 import { ServerError } from "../shared/types/errors/ServerError";
 import { ResponseFactory } from "./ResponseFactory";
 
+let requestUuid: string;
+beforeEach(() => {
+  requestUuid = UUIDFactory.uuidv4();
+});
+
 test("Error response", () => {
-  const response = ResponseFactory.createErrorResponse(new Error());
+  const response = ResponseFactory.createErrorResponse(
+    requestUuid,
+    new Error()
+  );
   expect(response.statusCode).toBe(500);
   expect(response.body.error.code).toBe(500);
 });
 
 test("ServerError response", () => {
   const response = ResponseFactory.createErrorResponse(
-    new ServerError(UUIDFactory.uuidv4(), new Error())
+    requestUuid,
+    new ServerError(new Error())
   );
   expect(response.statusCode).toBe(500);
   expect(response.body.error.code).toBe(500);
@@ -21,7 +30,8 @@ test("ServerError response", () => {
 
 test("CodedError response", () => {
   const response = ResponseFactory.createErrorResponse(
-    new InvalidResponseError(UUIDFactory.uuidv4(), 302)
+    requestUuid,
+    new InvalidResponseError(302)
   );
   expect(response.statusCode).toBe(500);
   expect(response.body.error.code).toBe(502);
@@ -29,13 +39,13 @@ test("CodedError response", () => {
 
 test("Sunny case", () => {
   const certificate = new RawCertificate("TestCert");
-  const response = ResponseFactory.createResponse(certificate);
+  const response = ResponseFactory.createResponse(requestUuid, certificate);
   expect(response.statusCode).toBe(200);
 });
 
 test("Sunny case data", () => {
   const certificate = new RawCertificate("TestCert");
-  const response = ResponseFactory.createResponse(certificate);
+  const response = ResponseFactory.createResponse(requestUuid, certificate);
   expect(response.body.certificate).toBe("TestCert");
 });
 
@@ -44,7 +54,8 @@ test("Logger called error", () => {
     log: jest.fn(),
   };
   ResponseFactory.createErrorResponse(
-    new InvalidResponseError("1234", 302),
+    requestUuid,
+    new InvalidResponseError(302),
     "example.com",
     <Logger>(<unknown>logger)
   );
@@ -56,7 +67,8 @@ test("Logger called ServerError", () => {
     log: jest.fn(),
   };
   ResponseFactory.createErrorResponse(
-    new ServerError("1234", new Error()),
+    requestUuid,
+    new ServerError(new Error()),
     "example.com",
     <Logger>(<unknown>logger)
   );
@@ -68,6 +80,7 @@ test("Logger called no error", () => {
     log: jest.fn(),
   };
   ResponseFactory.createResponse(
+    requestUuid,
     new RawCertificate(""),
     "example.com",
     <Logger>(<unknown>logger)

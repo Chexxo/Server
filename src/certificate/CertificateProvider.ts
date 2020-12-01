@@ -1,11 +1,13 @@
 import { request, Agent } from "https";
 import { parse as parseUrl } from "url";
 import { ErrorFactory } from "../errors/ErrorFactory";
-import { UUIDFactory } from "../helpers/UUIDFactory";
 import { RawCertificate } from "../shared/types/certificate/RawCertificate";
 import { InvalidResponseError } from "../shared/types/errors/InvalidResponseError";
 import { NodeError } from "../types/errors/NodeError";
 import { RawCertificateFactory } from "./RawCertificateFactory";
+import { checkHttpsURL } from "node-uri";
+import { InvalidUrlError } from "../shared/types/errors/InvalidUrlError";
+import { HostUnreachableError } from "../shared/types/errors/HostUnreachableError";
 
 class HTTPSOptions {
   public host: string;
@@ -18,9 +20,16 @@ class HTTPSOptions {
  * Class for fetching the certificate of the url provided.
  */
 export class CertificateProvider {
-  options: HTTPSOptions;
+  private options: HTTPSOptions;
+  private timeout: number;
 
-  public constructor() {
+  /**
+   * @param timeout The connection timeout in milliseconds.
+   * After the timeout a {@link HostUnreachableError} will
+   * be returned.
+   */
+  public constructor(timeout: number) {
+    this.timeout = timeout;
     const agentOptions = { rejectUnauthorized: false, maxCachedSessions: 0 };
     const agent = new Agent(agentOptions);
     this.options = {
@@ -41,10 +50,29 @@ export class CertificateProvider {
   public async fetchCertificateByUrl(url: string): Promise<RawCertificate> {
     this.options.host = url;
     return new Promise((resolve, reject) => {
+      try {
+        checkHttpsURL("https://" + url);
+      } catch (e) {
+        reject(new InvalidUrlError(e.message, e.stack));
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const req = request(this.options, (res) => {
         CertificateProvider.handleResponse(res, url, resolve, reject);
       });
+
+      const connectTimer = setTimeout(() => {
+        req.destroy();
+        reject(
+          new HostUnreachableError(`Timeout of ${this.timeout}ms was reached.`)
+        );
+      }, this.timeout);
+
+      req.on("socket", (socket) => {
+        socket.on("connect", () => {
+          clearTimeout(connectTimer);
+        });
+      });
+
       req.on("error", (requestError: NodeError) => {
         const error = ErrorFactory.getClassFromError(requestError);
         reject(error);
@@ -84,7 +112,7 @@ export class CertificateProvider {
       ) {
         resolve(RawCertificateFactory.getRawCertificateFromResponse(res));
       }
-      reject(new InvalidResponseError(UUIDFactory.uuidv4(), res.statusCode));
+      reject(new InvalidResponseError(res.statusCode));
     });
   }
 

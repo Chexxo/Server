@@ -9,6 +9,8 @@ export class HTTPSMockRequest {
     readonly callback?: (res: IncomingMessage) => void
   ) {}
 
+  public destroy = jest.fn();
+
   public on = jest.fn().mockImplementation((event, cb) => {
     switch (event) {
       case "error":
@@ -22,11 +24,18 @@ export class HTTPSMockRequest {
             error.code = "ECONNREFUSED";
             cb(error);
             break;
-          case "--":
+          case "unexpected.error.example.com":
             error.code = "--";
             cb(error);
             break;
         }
+        break;
+      case "socket":
+        cb({
+          on: jest.fn((event, cb) => {
+            cb();
+          }),
+        });
         break;
       default:
         cb();

@@ -45,6 +45,10 @@ components:
       nullable: true
       description: "The response to the getCertificate request. Error will be `null` if statusCode is `200`. Certificate will be `null` if statusCode is `500`"
       properties:
+        requestUuid:
+          type: "string"
+          format: "uuidv4"
+          description: "The uuid of the request which lead to this response. May be used for log correlation."
         error:
           $ref: "#/components/schemas/APIResponseError"
         certificate:
@@ -56,11 +60,7 @@ components:
       type: "object"
       nullable: true
       description: "The error that occured during the API-call or `null` if no error occured."
-      properties: 
-        uuid:
-          type: "string"
-          format: "uuidv4"
-          description: "The uuid of the error which occured. May be used for log correlation."
+      properties:
         code:
           $ref: "#/components/schemas/ErrorCode"
         publicMessage:
@@ -74,6 +74,8 @@ components:
         - 501
         - 502
         - 503
+        - 504
+        - 505
       description: >
         The code of the error which occured.
         Error:
@@ -81,3 +83,5 @@ components:
          * `501` - The host refused to open a connection.
          * `502` - Server responded with unsupported statuscode.
          * `503` - No host could be found with the domain provided.
+         * `504` - No route to host.
+         * `505` - The url provided is not valid.

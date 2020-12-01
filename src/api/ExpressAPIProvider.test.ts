@@ -1,7 +1,10 @@
 jest.mock("../certificate/CertificateProvider");
 
-import { Request, Response } from "express";
+import { Application, Request, Response } from "express";
 import { CertificateProvider } from "../certificate/CertificateProvider";
+import { ExpressPersistenceManager } from "../logger/ExpressPersistenceManager";
+import { ExpressPersistenceManagerConfig } from "../logger/ExpressPersistenceManagerConfig";
+import { Logger } from "../shared/logger/Logger";
 import { ExpressAPIProvider } from "./ExpressAPIProvider";
 
 let apiProvider: ExpressAPIProvider;
@@ -15,9 +18,30 @@ const response = {
   json: jest.fn(),
 };
 
+const close = jest.fn();
+const app = {
+  listen: jest.fn((_port, callback) => {
+    callback();
+    return {
+      close: close,
+    };
+  }),
+  get: jest.fn(),
+};
+
+const consoleSave = global.console;
+beforeAll(() => {
+  global.console = <Console>(<unknown>{
+    log: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  });
+});
+
 beforeEach(() => {
   apiProvider = new ExpressAPIProvider();
-  apiProvider["certificateProvider"] = new CertificateProvider();
+  apiProvider["app"] = <Application>(<unknown>app);
+  apiProvider["certificateProvider"] = new CertificateProvider(3000);
   response.json = jest.fn();
 });
 
@@ -58,4 +82,66 @@ test("Supported url data", () => {
   ).then(() => {
     expect(response.json.mock.calls[0][0].certificate).toBe("dadssadsa");
   });
+});
+
+test("Has correct endpoint", () => {
+  apiProvider.init(
+    new CertificateProvider(3000),
+    new Logger(
+      new ExpressPersistenceManager(new ExpressPersistenceManagerConfig())
+    )
+  );
+  expect(app.get).toHaveBeenLastCalledWith(
+    "/certificate/:url",
+    apiProvider["getCertificate"]
+  );
+});
+
+test("Has correct default port", () => {
+  apiProvider.init(
+    new CertificateProvider(3000),
+    new Logger(
+      new ExpressPersistenceManager(new ExpressPersistenceManagerConfig())
+    )
+  );
+  expect(app.listen).toHaveBeenLastCalledWith(3000, expect.anything());
+});
+
+test("Changes port", () => {
+  apiProvider = new ExpressAPIProvider(8080);
+  apiProvider["app"] = <Application>(<unknown>app);
+  apiProvider.init(
+    new CertificateProvider(3000),
+    new Logger(
+      new ExpressPersistenceManager(new ExpressPersistenceManagerConfig())
+    )
+  );
+  expect(app.listen).toHaveBeenLastCalledWith(8080, expect.anything());
+});
+
+test("Closes server", () => {
+  apiProvider.init(
+    new CertificateProvider(3000),
+    new Logger(
+      new ExpressPersistenceManager(new ExpressPersistenceManagerConfig())
+    )
+  );
+  apiProvider.close();
+  expect(close).toHaveBeenCalled();
+});
+
+test("Returns correct start message", () => {
+  apiProvider = new ExpressAPIProvider(8080);
+  apiProvider["app"] = <Application>(<unknown>app);
+  apiProvider.init(
+    new CertificateProvider(800),
+    new Logger(
+      new ExpressPersistenceManager(new ExpressPersistenceManagerConfig())
+    )
+  );
+  expect(console.log).toHaveBeenLastCalledWith(expect.stringMatching(/8080/));
+});
+
+afterAll(() => {
+  global.console = consoleSave;
 });
