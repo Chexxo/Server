@@ -3,18 +3,21 @@ import { InvalidResponseError } from "../../shared/types/errors/InvalidResponseE
 import { ServerError } from "../../shared/types/errors/ServerError";
 
 export class CertificateProvider {
-  async fetchCertificateByUrl(url: string): Promise<RawCertificate> {
-    return new Promise((resolve, reject) => {
-      switch (url) {
-        case "invalid.status.example.com":
-          reject(new InvalidResponseError(301));
-        case "unexpected.example.com":
-          reject(new Error());
-        case "example.com":
-          resolve(new RawCertificate("dadssadsa"));
-        default:
-          reject(new ServerError(new Error()));
-      }
-    });
-  }
+  fetchCertificateByUrl = jest.fn(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (url: string, userAgent?: string): Promise<RawCertificate> => {
+      return new Promise((resolve, reject) => {
+        switch (url) {
+          case "invalid.status.example.com":
+            reject(new InvalidResponseError(301));
+          case "unexpected.example.com":
+            reject(new Error());
+          case "example.com":
+            resolve(new RawCertificate("dadssadsa"));
+          default:
+            reject(new ServerError(new Error()));
+        }
+      });
+    }
+  );
 }

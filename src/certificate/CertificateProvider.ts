@@ -13,6 +13,8 @@ class HTTPSOptions {
   public host: string;
   public port: number;
   public method: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public headers: any;
   public agent?: Agent;
 }
 
@@ -36,6 +38,7 @@ export class CertificateProvider {
       host: "",
       port: 443,
       method: "GET",
+      headers: {},
       agent: agent,
     };
     this.fetchCertificateByUrl = this.fetchCertificateByUrl.bind(this);
@@ -47,8 +50,15 @@ export class CertificateProvider {
    * @return A promise which resolves to the fetched certificate or a CertificateError
    * if fetching failed.
    */
-  public async fetchCertificateByUrl(url: string): Promise<RawCertificate> {
+  public async fetchCertificateByUrl(
+    url: string,
+    userAgent?: string
+  ): Promise<RawCertificate> {
     this.options.host = url;
+    if (userAgent) {
+      console.log(userAgent);
+      this.options.headers["User-Agent"] = userAgent;
+    }
     return new Promise((resolve, reject) => {
       try {
         checkHttpsURL("https://" + url);

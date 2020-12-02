@@ -71,7 +71,8 @@ export class ExpressAPIProvider implements APIProvider {
 
     try {
       const result = await this.certificateProvider.fetchCertificateByUrl(
-        req.params.url
+        req.params.url,
+        req.headers["user-agent"]
       );
       response = ResponseFactory.createResponse(
         requestUuid,

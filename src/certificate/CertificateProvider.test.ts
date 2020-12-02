@@ -11,6 +11,12 @@ import { CertificateProvider } from "./CertificateProvider";
 import { TestCertificateStore } from "./__mocks__/TestCertificateStore";
 
 const certificateProvider = new CertificateProvider(3000);
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const https = require("https");
+
+afterEach(() => {
+  https.request.mockClear();
+});
 
 test("No host", () => {
   return certificateProvider
@@ -66,6 +72,21 @@ test("Invalid url error", () => {
   return certificateProvider
     .fetchCertificateByUrl("com")
     .catch((data: ServerError) => expect(data).toBeInstanceOf(InvalidUrlError));
+});
+
+test("user-agent proxy", () => {
+  return certificateProvider
+    .fetchCertificateByUrl("www.example.com", "Mozilla 5.0")
+    .then(() => {
+      expect(https.request).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          headers: {
+            "User-Agent": "Mozilla 5.0",
+          },
+        }),
+        expect.anything()
+      );
+    });
 });
 
 test("Sunny case", () => {
