@@ -41,6 +41,7 @@ export class AWSAPIProvider implements APIProvider {
     context: any
   ): Promise<unknown | Error> {
     const path = event.rawPath.toLowerCase();
+    const userAgent = event.headers["user-agent"];
     const requestUuid = context.awsRequestId;
 
     if (!path.includes("/certificate/")) {
@@ -49,7 +50,10 @@ export class AWSAPIProvider implements APIProvider {
     const url = path.replace("/certificate/", "");
     let response;
     try {
-      const result = await this.certificateProvider.fetchCertificateByUrl(url);
+      const result = await this.certificateProvider.fetchCertificateByUrl(
+        url,
+        userAgent
+      );
       response = await ResponseFactory.createResponse(
         requestUuid,
         result,

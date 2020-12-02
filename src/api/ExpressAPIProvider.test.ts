@@ -8,7 +8,11 @@ import { Logger } from "../shared/logger/Logger";
 import { ExpressAPIProvider } from "./ExpressAPIProvider";
 
 let apiProvider: ExpressAPIProvider;
+let certificateProvider: CertificateProvider;
 const request = {
+  headers: {
+    "user-agent": "Mozilla",
+  },
   params: {
     url: "-",
   },
@@ -41,7 +45,8 @@ beforeAll(() => {
 beforeEach(() => {
   apiProvider = new ExpressAPIProvider();
   apiProvider["app"] = <Application>(<unknown>app);
-  apiProvider["certificateProvider"] = new CertificateProvider(3000);
+  certificateProvider = new CertificateProvider(3000);
+  apiProvider["certificateProvider"] = certificateProvider;
   response.json = jest.fn();
 });
 
@@ -81,6 +86,19 @@ test("Supported url data", () => {
     <Response>(<unknown>response)
   ).then(() => {
     expect(response.json.mock.calls[0][0].certificate).toBe("dadssadsa");
+  });
+});
+
+test("relays user-agent to provider", () => {
+  request.params.url = "example.com";
+  return apiProvider["getCertificate"](
+    <Request>(<unknown>request),
+    <Response>(<unknown>response)
+  ).then(() => {
+    expect(certificateProvider.fetchCertificateByUrl).toHaveBeenLastCalledWith(
+      expect.anything(),
+      "Mozilla"
+    );
   });
 });
 

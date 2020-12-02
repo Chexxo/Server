@@ -4,5 +4,8 @@
     "src/**/__tests__",
     "src/**/__mocks__",
     "**/*.test.ts"
-  ]
+  ],
+  "compilerOptions": {
+    "removeComments": false,
+  }
 }

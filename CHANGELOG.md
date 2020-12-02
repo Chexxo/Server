@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.1] - 2020-12-02
+### Added
+- The user-agent header of the request is now relayed to the target server.
+
+### Fixed
+- Bug where a certificate could not be read because the user-agent header has not been set.
+
 ## [3.0.0] - 2020-12-01
 ### Added 
 - Timeout to shorten maximum request time.
