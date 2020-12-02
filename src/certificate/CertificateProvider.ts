@@ -13,6 +13,7 @@ class HTTPSOptions {
   public host: string;
   public port: number;
   public method: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public headers: any;
   public agent?: Agent;
 }

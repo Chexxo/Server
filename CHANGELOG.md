@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The user-agent header of the request is now relayed to the target server.
 
 ### Fixed
-- Bug where a certificate could not be read because the user-agent header has not been set.
+- Bug where a certificate could not be read because the target server triggered a redirect due to the missing user-agent header.
 
 ## [3.0.0] - 2020-12-01
 ### Added 
