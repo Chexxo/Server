@@ -46,7 +46,9 @@ export class CertificateProvider {
 
   /**
    * Fetches the https certificate from the given url.
+   *
    * @param url The url of the webserver from which the certificate should be fetched.
+   * @param userAgent The user-agent header that will be sent to the server.
    * @return A promise which resolves to the fetched certificate or a CertificateError
    * if fetching failed.
    */
@@ -93,6 +95,7 @@ export class CertificateProvider {
 
   /**
    * Handles the response of the node https module.
+   *
    * @param res The node https module response object.
    * @param url The url which was requested.
    * @param resolve The function to resolve the fetchCertificateByUrl promise.
