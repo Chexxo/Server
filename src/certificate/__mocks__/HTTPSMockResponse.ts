@@ -10,6 +10,7 @@ export class HTTPSMockResponse {
 
   constructor(readonly options: RequestOptions) {}
 
+  // eslint-disable-next-line max-lines-per-function
   public on = jest.fn().mockImplementation((event, cb) => {
     switch (event) {
       case "error":

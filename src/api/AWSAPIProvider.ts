@@ -1,5 +1,6 @@
 import { CertificateProvider } from "../certificate/CertificateProvider";
 import { Logger } from "../shared/logger/Logger";
+import { APIResponse } from "../shared/types/api/APIResponse";
 import { APIProvider } from "./APIProvider";
 import { ResponseFactory } from "./ResponseFactory";
 
@@ -21,6 +22,12 @@ export class AWSAPIProvider implements APIProvider {
     this.getCertificate = this.getCertificate.bind(this);
   }
 
+  /**
+   * The function to initialize the API-Provider.
+   *
+   * @param certificateProvider The certificate provider to be used.
+   * @param logger The logger to be used.
+   */
   public init(certificateProvider: CertificateProvider, logger: Logger): void {
     this.certificateProvider = certificateProvider;
     this.logger = logger;
@@ -29,6 +36,7 @@ export class AWSAPIProvider implements APIProvider {
   /**
    * The AWS-Lambda callback. It provides a response according
    * to the AWS-Lambda specifications.
+   *
    * @param event The AWS generated event for the request.
    * @returns Stringified AWS-Lambda conform json body or error
    * if no endpoint could be applied. Returning an error leads
@@ -48,7 +56,34 @@ export class AWSAPIProvider implements APIProvider {
       throw Error();
     }
     const url = path.replace("/certificate/", "");
-    let response;
+    const response = await this.fetchResponse(requestUuid, url, userAgent);
+    return {
+      cookies: [],
+      isBase64Encoded: false,
+      statusCode: response.statusCode,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(response.body),
+    };
+  }
+
+  /**
+   * Gets the response of the certificate provider and
+   * generates an {@link APIResponse} from it.
+   *
+   * @param requestUuid The uuid of the request which lead
+   * to this response
+   * @param url The url which was requested.
+   * @param userAgent The user-agent header field of the client
+   * to be passed through to the target server.
+   */
+  private async fetchResponse(
+    requestUuid: string,
+    url: string,
+    userAgent: string
+  ): Promise<APIResponse> {
+    let response: APIResponse;
     try {
       const result = await this.certificateProvider.fetchCertificateByUrl(
         url,
@@ -68,14 +103,6 @@ export class AWSAPIProvider implements APIProvider {
         this.logger
       );
     }
-    return {
-      cookies: [],
-      isBase64Encoded: false,
-      statusCode: response.statusCode,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(response.body),
-    };
+    return response;
   }
 }

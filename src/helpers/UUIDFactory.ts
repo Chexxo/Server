@@ -7,6 +7,7 @@ import { randomInt } from "crypto";
 export abstract class UUIDFactory {
   /**
    * Create a uuid version 4.
+   *
    * @returns The string representation of a uuid
    * version 4.
    */

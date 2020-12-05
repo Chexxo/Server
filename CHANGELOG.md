@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.2] - 2020-12-05
+### Changed
+- Log entries now contain a requestUuid. Previously the requestUuid was passed along seperately.
+
 ## [3.0.1] - 2020-12-02
 ### Added
 - The user-agent header of the request is now relayed to the target server.

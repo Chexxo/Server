@@ -15,7 +15,7 @@ export class CertificateProvider {
           case "example.com":
             resolve(new RawCertificate("dadssadsa"));
           default:
-            reject(new ServerError(new Error()));
+            reject(new ServerError());
         }
       });
     }

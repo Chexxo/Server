@@ -8,7 +8,6 @@ module.exports = {
     "./src/index_aws.ts"
   ],
   readme: "./README.md",
-  mode: "file",
   mode: "modules",
   out: "./docs/",
   plugin: ["typedoc-plugin-no-inherit", "typedoc-plugin-external-module-name"],

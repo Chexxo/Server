@@ -18,6 +18,8 @@ export class ExpressAPIProvider implements APIProvider {
 
   /**
    * Initializes the express server but does not start it.
+   *
+   * @param port The port to be used by express.
    */
   public constructor(port?: number) {
     this.port = port || 3000;
@@ -29,9 +31,11 @@ export class ExpressAPIProvider implements APIProvider {
   /**
    * Configures and starts the Express-Server on the
    * defined port or port 3000 if no port has been provided.
+   *
    * @param certificateProvider The certificate provider
    * which will be used by the APIProvider in order to get
    * the {@link RawCertificate} for the url provided.
+   * @param logger The logger to be used.
    */
   public init(certificateProvider: CertificateProvider, logger: Logger): void {
     this.certificateProvider = certificateProvider;
@@ -61,6 +65,7 @@ export class ExpressAPIProvider implements APIProvider {
    * Is called as soon as the /getCertificate endpoint gets
    * requested by a user. Returns the appropriate Chexxo
    * server API response.
+   *
    * @param req The express request that lead to the invocation
    * of this function.
    * @param res The response that will be returned by express.

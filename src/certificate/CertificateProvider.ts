@@ -49,16 +49,17 @@ export class CertificateProvider {
    *
    * @param url The url of the webserver from which the certificate should be fetched.
    * @param userAgent The user-agent header that will be sent to the server.
+   *
    * @return A promise which resolves to the fetched certificate or a CertificateError
    * if fetching failed.
    */
+  // eslint-disable-next-line max-lines-per-function
   public async fetchCertificateByUrl(
     url: string,
     userAgent?: string
   ): Promise<RawCertificate> {
     this.options.host = url;
     if (userAgent) {
-      console.log(userAgent);
       this.options.headers["User-Agent"] = userAgent;
     }
     return new Promise((resolve, reject) => {

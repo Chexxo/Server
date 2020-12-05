@@ -68,7 +68,7 @@ test("Logger called ServerError", () => {
   };
   ResponseFactory.createErrorResponse(
     requestUuid,
-    new ServerError(new Error()),
+    new ServerError(),
     "example.com",
     <Logger>(<unknown>logger)
   );

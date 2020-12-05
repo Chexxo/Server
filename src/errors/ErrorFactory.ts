@@ -12,7 +12,9 @@ import { NodeError } from "../types/errors/NodeError";
 export class ErrorFactory {
   /**
    * Converts the error thrown by the NodeJS https module into a {@link CodedError}.
+   *
    * @param error The error thrown by the NodeJS https module.
+   *
    * @returns The specific {@link CodedError} or {@link ServerError} if no matching
    * error has been found.
    */
