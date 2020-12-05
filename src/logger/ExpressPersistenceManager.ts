@@ -5,6 +5,7 @@ import { LogFactory } from "../shared/logger/LogFactory";
 import { LoggerPersistenceManager } from "../shared/logger/LoggerPersistenceManager";
 // eslint-disable-next-line import/no-unresolved
 import { promises } from "fs";
+import { UUIDFactory } from "../helpers/UUIDFactory";
 
 /**
  * Class to persist logs when using Express. The logs
@@ -32,11 +33,10 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
    * some logs might not be persisted to file if the express server is
    * shutdown whilst requests are still coming in.
    *
-   * @param uuid The uuid of the request which lead to this entry.
    * @param logEntry The log entry to be persisted.
    */
-  public async save(uuid: string, logEntry: LogEntry): Promise<void> {
-    const logEntryReadable = LogFactory.formatLogEntry(uuid, logEntry);
+  public async save(logEntry: LogEntry): Promise<void> {
+    const logEntryReadable = LogFactory.formatLogEntry(logEntry);
     let logFunction;
     switch (logEntry.logLevel) {
       case LogLevel.WARNING:
@@ -51,7 +51,7 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
     logFunction(logEntryReadable);
 
     if (logEntry.logLevel < LogLevel.INFO) {
-      await this.persist(uuid, logEntry, logEntryReadable);
+      await this.persist(logEntry, logEntryReadable);
     }
   }
 
@@ -59,16 +59,11 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
    * Persists the given values on a log file on disk.
    * Also calls logrotate if necessary.
    *
-   * @param uuid The uuid of the request.
    * @param logEntry The log entry to be persistet.
    * @param logEntryReadable The human readable
    * version of the log entry.
    */
-  private async persist(
-    uuid: string,
-    logEntry: LogEntry,
-    logEntryReadable: string
-  ) {
+  private async persist(logEntry: LogEntry, logEntryReadable: string) {
     try {
       try {
         await promises.mkdir(this.config.logDir);
@@ -80,19 +75,19 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
 
       const yesterday = Date.now() - ExpressPersistenceManager.millisecondsADay;
       if (this.logRotateTime < yesterday) {
-        await this.logRotate(uuid);
+        await this.logRotate(logEntry.requestUuid);
         this.logRotateTime = Date.now();
       }
       this.writeLog(logEntry);
       this.writeLogReadable(logEntryReadable);
     } catch (e) {
       const noLogEntryMessage = new LogEntry(
+        UUIDFactory.uuidv4(),
         LogLevel.WARNING,
         Date.now(),
         "Log could not be persisted."
       );
       const noLogEntryMessageReadable = LogFactory.formatLogEntry(
-        uuid,
         noLogEntryMessage
       );
       console.warn(noLogEntryMessageReadable);
@@ -102,6 +97,7 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
   /**
    * Writes a {@link LogEntry} to the system readable
    * log file.
+   *
    * @param logEntry The log entry to be written.
    */
   private async writeLog(logEntry: LogEntry) {
@@ -133,9 +129,9 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
    * Removes expired log files according to the
    * configuration provided in the {@link ExpressPersistenceManagerConfig}.
    *
-   * @param uuid The uuid of the request which lead to this rotate.
+   * @param requestUuid The uuid of the request which lead to this rotate.
    */
-  private async logRotate(uuid: string): Promise<void> {
+  private async logRotate(requestUuid: string): Promise<void> {
     const files = await promises.readdir(this.config.logDir);
     const deadline =
       Date.parse(ExpressPersistenceManager.getDatePrefix()) -
@@ -147,11 +143,12 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
       if (millisecondTimestamp !== null && millisecondTimestamp <= deadline) {
         await promises.unlink(this.config.logDir + file);
         const removedFileInfo = new LogEntry(
+          requestUuid,
           LogLevel.INFO,
           Date.now(),
           "Logrotate: " + this.config.logDir + file + " has been removed."
         );
-        this.save(uuid, removedFileInfo);
+        this.save(removedFileInfo);
       }
     });
   }

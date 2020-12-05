@@ -12,11 +12,10 @@ export class AWSPersistenceManager implements LoggerPersistenceManager {
   /**
    * Logs the given {@link LogEntry} to the console.
    *
-   * @param uuid The uuid of the request which lead to this entry.
    * @param logEntry The log entry to be persisted.
    */
-  public save(uuid: string, logEntry: LogEntry): void {
-    const logEntryReadable = LogFactory.formatLogEntry(uuid, logEntry, true);
+  public save(logEntry: LogEntry): void {
+    const logEntryReadable = LogFactory.formatLogEntry(logEntry, true);
     let logFunction;
     switch (logEntry.logLevel) {
       case LogLevel.WARNING:

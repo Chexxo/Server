@@ -1,7 +1,6 @@
 jest.mock("fs");
 
 import fs = require("fs");
-import { UUIDFactory } from "../helpers/UUIDFactory";
 import { LogLevel } from "../shared/logger/Logger";
 import { ConnectionRefusedError } from "../shared/types/errors/ConnectionRefusedError";
 import { LogEntry } from "../shared/types/logger/LogEntry";
@@ -10,6 +9,7 @@ import { ExpressPersistenceManagerConfig } from "./ExpressPersistenceManagerConf
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fsAny = <any>fs;
 
+const requestUuid = "abc123";
 let persistence: ExpressPersistenceManager;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,16 +18,26 @@ let MOCK_FILE_INFO = <any>{
   "/path/to/file2.txt": "file2 contents",
 };
 
-const logEntryInfo = new LogEntry(LogLevel.INFO, Date.now(), "Hello Info!");
+const logEntryInfo = new LogEntry(
+  requestUuid,
+  LogLevel.INFO,
+  Date.now(),
+  "Hello Info!"
+);
 const logEntryWarning = new LogEntry(
+  requestUuid,
   LogLevel.WARNING,
   Date.now(),
   "Hello Warning!"
 );
-const logEntryError = new LogEntry(LogLevel.ERROR, Date.now(), "Hello Error!");
+const logEntryError = new LogEntry(
+  requestUuid,
+  LogLevel.ERROR,
+  Date.now(),
+  "Hello Error!"
+);
 
 const consoleSave = global.console;
-let requestUuid: string;
 
 beforeAll(() => {
   global.console = <Console>(<unknown>{
@@ -43,13 +53,13 @@ beforeEach(() => {
   persistence = new ExpressPersistenceManager(
     new ExpressPersistenceManagerConfig()
   );
-  requestUuid = UUIDFactory.uuidv4();
 });
 
+// eslint-disable-next-line max-lines-per-function
 describe("save()", () => {
   test("Writes info to console", () => {
-    persistence.save(requestUuid, logEntryInfo);
-    return persistence.save(requestUuid, logEntryInfo).then(() => {
+    persistence.save(logEntryInfo);
+    return persistence.save(logEntryInfo).then(() => {
       expect(global.console.log).toHaveBeenLastCalledWith(
         expect.stringMatching(/Hello Info!/)
       );
@@ -57,7 +67,7 @@ describe("save()", () => {
   });
 
   test("Writes warning to console", () => {
-    return persistence.save(requestUuid, logEntryWarning).then(() => {
+    return persistence.save(logEntryWarning).then(() => {
       expect(global.console.warn).toHaveBeenLastCalledWith(
         expect.stringMatching(/Hello Warning!/)
       );
@@ -65,8 +75,8 @@ describe("save()", () => {
   });
 
   test("Writes error to console", () => {
-    persistence.save(requestUuid, logEntryError);
-    return persistence.save(requestUuid, logEntryError).then(() => {
+    persistence.save(logEntryError);
+    return persistence.save(logEntryError).then(() => {
       expect(global.console.error).toHaveBeenLastCalledWith(
         expect.stringMatching(/Hello Error!/)
       );
@@ -75,12 +85,13 @@ describe("save()", () => {
 
   test("Takes uuid from request", () => {
     const logEntry = new LogEntry(
+      requestUuid,
       LogLevel.ERROR,
       Date.now(),
       "Hello",
       new ConnectionRefusedError()
     );
-    return persistence.save("abc123", logEntry).then(() => {
+    return persistence.save(logEntry).then(() => {
       expect(global.console.error).toHaveBeenLastCalledWith(
         expect.stringMatching(/\[abc123\]/)
       );
@@ -88,21 +99,22 @@ describe("save()", () => {
   });
 });
 
+// eslint-disable-next-line max-lines-per-function
 describe("persistence()", () => {
   test("Does not persist info", () => {
-    return persistence.save(requestUuid, logEntryInfo).then(() => {
+    return persistence.save(logEntryInfo).then(() => {
       expect(fsAny.promises.appendFile).toHaveBeenCalledTimes(0);
     });
   });
 
   test("Writes warning to both log files", () => {
-    return persistence.save(requestUuid, logEntryWarning).then(() => {
+    return persistence.save(logEntryWarning).then(() => {
       expect(fsAny.promises.appendFile).toHaveBeenCalledTimes(2);
     });
   });
 
   test("Writes error to both log files", () => {
-    return persistence.save(requestUuid, logEntryError).then(() => {
+    return persistence.save(logEntryError).then(() => {
       expect(fsAny.promises.appendFile).toHaveBeenCalledTimes(2);
     });
   });
@@ -111,7 +123,7 @@ describe("persistence()", () => {
     persistence = new ExpressPersistenceManager(
       new ExpressPersistenceManagerConfig(7, "./nolog/")
     );
-    return persistence.save(requestUuid, logEntryError).then(() => {
+    return persistence.save(logEntryError).then(() => {
       expect(fsAny.promises.mkdirMock).toHaveBeenCalledWith("./nolog/");
     });
   });
@@ -120,7 +132,7 @@ describe("persistence()", () => {
     persistence = new ExpressPersistenceManager(
       new ExpressPersistenceManagerConfig(7, "./errorPath/mkdir/")
     );
-    return persistence.save(requestUuid, logEntryError).then(() => {
+    return persistence.save(logEntryError).then(() => {
       expect(console.warn).not.toHaveBeenCalled();
     });
   });
@@ -129,7 +141,7 @@ describe("persistence()", () => {
     persistence = new ExpressPersistenceManager(
       new ExpressPersistenceManagerConfig(7, "./errorPath/mkdir/other/")
     );
-    return persistence.save(requestUuid, logEntryError).then(() => {
+    return persistence.save(logEntryError).then(() => {
       expect(console.warn).toHaveBeenCalledWith(
         expect.stringMatching(/Log could not be persisted./)
       );
@@ -140,7 +152,7 @@ describe("persistence()", () => {
     persistence = new ExpressPersistenceManager(
       new ExpressPersistenceManagerConfig(7, "./errorPath/")
     );
-    return persistence.save(requestUuid, logEntryError).then(() => {
+    return persistence.save(logEntryError).then(() => {
       expect(global.console.warn).toHaveBeenLastCalledWith(
         expect.stringMatching(/Log could not be persisted./)
       );
@@ -148,6 +160,7 @@ describe("persistence()", () => {
   });
 });
 
+// eslint-disable-next-line max-lines-per-function
 describe("logrotate()", () => {
   test("Deletes old files", () => {
     MOCK_FILE_INFO = {
@@ -155,7 +168,7 @@ describe("logrotate()", () => {
       "/path/to/file2.txt": "file2 contents",
     };
     fsAny.__setMockFiles(MOCK_FILE_INFO);
-    return persistence.save(requestUuid, logEntryError).then(() => {
+    return persistence.save(logEntryError).then(() => {
       expect(fs.promises.unlink).toHaveBeenLastCalledWith(
         "./log/2020-10-05_human.log"
       );
@@ -169,7 +182,7 @@ describe("logrotate()", () => {
     };
     fsAny.__setMockFiles(MOCK_FILE_INFO);
     persistence["logRotateTime"] = Date.now();
-    return persistence.save(requestUuid, logEntryError).then(() => {
+    return persistence.save(logEntryError).then(() => {
       expect(fs.promises.unlink).not.toHaveBeenCalled();
     });
   });
@@ -181,7 +194,7 @@ describe("logrotate()", () => {
       "/path/to/file2.txt": "file2 contents",
     };
     fsAny.__setMockFiles(MOCK_FILE_INFO);
-    return persistence.save(requestUuid, logEntryError).then(() => {
+    return persistence.save(logEntryError).then(() => {
       expect(fs.promises.unlink).toHaveBeenCalledTimes(2);
     });
   });
@@ -192,7 +205,7 @@ describe("logrotate()", () => {
       "/path/to/file2.txt": "file2 contents",
     };
     fsAny.__setMockFiles(MOCK_FILE_INFO);
-    return persistence.save(requestUuid, logEntryError).then(() => {
+    return persistence.save(logEntryError).then(() => {
       expect(global.console.log).toHaveBeenLastCalledWith(
         expect.stringMatching(/has been removed./)
       );
@@ -207,7 +220,7 @@ describe("logrotate()", () => {
     };
     MOCK_FILE_INFO[fileString] = 'console.log("file1 contents");';
     fsAny.__setMockFiles(MOCK_FILE_INFO);
-    return persistence.save(requestUuid, logEntryError).then(() => {
+    return persistence.save(logEntryError).then(() => {
       expect(fs.promises.unlink).not.toHaveBeenCalled();
     });
   });
@@ -218,8 +231,8 @@ describe("logrotate()", () => {
       "/path/to/file2.txt": "file2 contents",
     };
     fsAny.__setMockFiles(MOCK_FILE_INFO);
-    persistence.save(requestUuid, logEntryError);
-    return persistence.save(requestUuid, logEntryError).then(() => {
+    persistence.save(logEntryError);
+    return persistence.save(logEntryError).then(() => {
       expect(fs.promises.unlink).not.toHaveBeenCalled();
     });
   });

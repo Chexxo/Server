@@ -8,6 +8,7 @@ export abstract class RawCertificateFactory {
   /**
    * Converts a binary buffer containing a certificate in `DER`
    * format into a {@link RawCertificate} object.
+   *
    * @param der Binary representation of the certificate in the
    * `DER` format.
    */
@@ -21,6 +22,7 @@ export abstract class RawCertificateFactory {
 
   /**
    * Extracts the raw certificate from a node https module response.
+   *
    * @param res The node https module response.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
