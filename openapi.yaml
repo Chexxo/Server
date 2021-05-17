@@ -32,7 +32,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/APIResponseBody"
-        "500":
+        "5XX":
           description: "Server error"
           content:
             application/json:
