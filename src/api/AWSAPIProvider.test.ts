@@ -5,12 +5,19 @@ import { CertificateProvider } from "../certificate/CertificateProvider";
 
 let apiProvider: AWSAPIProvider;
 let certificateProvider: CertificateProvider;
-let event: { rawPath: string; headers?: { "user-agent": string } };
+let event: {
+  rawPath: string;
+  pathParameters: { domain: string };
+  headers?: { "user-agent": string };
+};
 let context: { awsRequestId: string };
 
 beforeEach(() => {
   event = {
     rawPath: "example.com/certificate/",
+    pathParameters: {
+      domain: "example.com",
+    },
     headers: {
       "user-agent": "Mozilla",
     },
@@ -21,20 +28,6 @@ beforeEach(() => {
   apiProvider = new AWSAPIProvider();
   certificateProvider = new CertificateProvider(800);
   apiProvider.init(certificateProvider, null);
-});
-
-test("Unsupported endpoint", () => {
-  event.rawPath = "www.google.com/";
-  return apiProvider
-    .getCertificate(event, context)
-    .catch((data: Error) => expect(data).toBeInstanceOf(Error));
-});
-
-test("Unexpected CertificateProvider error", () => {
-  event.rawPath = "-/certificate/";
-  return apiProvider
-    .getCertificate(event, context)
-    .catch((data: Error) => expect(data).toBeInstanceOf(Error));
 });
 
 test("relay user-agent to provider", () => {
