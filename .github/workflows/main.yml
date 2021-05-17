@@ -16,9 +16,9 @@ jobs:
           submodules: true
       
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v2
         with:
-          node-version: 12.x
+          node-version: 14
       
       - name: Install dependencies
         run: npm ci
@@ -42,9 +42,9 @@ jobs:
           submodules: true
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v2
         with:
-          node-version: 12.x
+          node-version: 14
 
       - name: Load Cache
         id: load-cache
@@ -61,7 +61,7 @@ jobs:
         run: npm run test
 
       - name: Upload coverage
-        uses: actions/upload-artifact@v2.2.0
+        uses: actions/upload-artifact@v2
         with:
           name: Coverage
           path: coverage/*
@@ -80,9 +80,9 @@ jobs:
           submodules: true
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v2
         with:
-          node-version: 12.x
+          node-version: 14
       
       - name: Load Cache
         id: load-cache
@@ -96,7 +96,7 @@ jobs:
         run: npm run build:express
       
       - name: Upload express
-        uses: actions/upload-artifact@v2.2.0
+        uses: actions/upload-artifact@v2
         with:
           name: Express
           path: dist/*
@@ -107,7 +107,7 @@ jobs:
         run: npm run build:aws
 
       - name: Upload AWS
-        uses: actions/upload-artifact@v2.2.0
+        uses: actions/upload-artifact@v2
         with:
           name: AWS
           path: dist/*
@@ -118,7 +118,7 @@ jobs:
         run: npm run build:documentation
       
       - name: Upload documentation
-        uses: actions/upload-artifact@v2.2.0
+        uses: actions/upload-artifact@v2
         with:
           name: Documentation
           path: docs/*
@@ -137,9 +137,9 @@ jobs:
           submodules: true
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v2
         with:
-          node-version: 12.x
+          node-version: 14
 
       - name: Load Cache
         id: load-cache
@@ -153,7 +153,7 @@ jobs:
         run: npm run build:express
       
       - name: Upload express
-        uses: actions/upload-artifact@v2.2.0
+        uses: actions/upload-artifact@v2
         with:
           name: Express
           path: dist/*
@@ -164,7 +164,7 @@ jobs:
         run: npm run build:aws
 
       - name: Upload AWS
-        uses: actions/upload-artifact@v2.2.0
+        uses: actions/upload-artifact@v2
         with:
           name: AWS
           path: dist/*
@@ -175,7 +175,7 @@ jobs:
         run: npm run build:documentation
       
       - name: Upload documentation
-        uses: actions/upload-artifact@v2.2.0
+        uses: actions/upload-artifact@v2
         with:
           name: Documentation
           path: docs/*
