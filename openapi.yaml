@@ -47,7 +47,6 @@ components:
 
     APIResponseSuccess:
       type: "object"
-      nullable: true
       description: "The response to the getCertificate request. Error will be `null`."
       properties:
         requestUuid:
@@ -57,11 +56,11 @@ components:
           format: "byte"
           description: "The pem formatted certificate of the domain provided"
         error:
-          null
+          nullable: true
+          type: object
 
     APIResponseError:
       type: "object"
-      nullable: true
       description: "The response to the getCertificate request when an error occurred. Certificate will be `null`"
       properties:
         requestUuid:
@@ -76,7 +75,8 @@ components:
               type: "string"
               description: "A short description of the error."
         certificate:
-          null
+          nullable: true
+          type: object
 
     ErrorCode:
       type: integer
