@@ -87,9 +87,8 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
         Date.now(),
         "Log could not be persisted."
       );
-      const noLogEntryMessageReadable = LogFactory.formatLogEntry(
-        noLogEntryMessage
-      );
+      const noLogEntryMessageReadable =
+        LogFactory.formatLogEntry(noLogEntryMessage);
       console.warn(noLogEntryMessageReadable);
     }
   }
@@ -137,9 +136,8 @@ export class ExpressPersistenceManager implements LoggerPersistenceManager {
       Date.parse(ExpressPersistenceManager.getDatePrefix()) -
       this.config.logDays * ExpressPersistenceManager.millisecondsADay;
     files.forEach(async (file) => {
-      const millisecondTimestamp = ExpressPersistenceManager.getTimestampFromFilename(
-        file
-      );
+      const millisecondTimestamp =
+        ExpressPersistenceManager.getTimestampFromFilename(file);
       if (millisecondTimestamp !== null && millisecondTimestamp <= deadline) {
         await promises.unlink(this.config.logDir + file);
         const removedFileInfo = new LogEntry(
