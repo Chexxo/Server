@@ -54,12 +54,12 @@ components:
         certificate:
           type: "string"
           format: "byte"
-          description: "The pem formatted certificate of the domain provided or `null` if an error occured."
+          description: "The pem formatted certificate of the domain provided or `null` if an error occurred."
   
     APIResponseError: 
       type: "object"
       nullable: true
-      description: "The error that occured during the API-call or `null` if no error occured."
+      description: "The error that occurred during the API-call or `null` if no error occurred."
       properties:
         code:
           $ref: "#/components/schemas/ErrorCode"
@@ -77,11 +77,11 @@ components:
         - 504
         - 505
       description: >
-        The code of the error which occured.
+        The code of the error which occurred.
         Error:
-         * `500` - An internal server error occured.
+         * `500` - An internal server error occurred.
          * `501` - The host refused to open a connection.
-         * `502` - Server responded with unsupported statuscode.
+         * `502` - Server responded with unsupported status code.
          * `503` - No host could be found with the domain provided.
          * `504` - No route to host.
          * `505` - The url provided is not valid.
