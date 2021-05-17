@@ -31,42 +31,53 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/APIResponseBody"
-        "500":
+                $ref: "#/components/schemas/APIResponseSuccess"
+        "5XX":
           description: "Server error"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/APIResponseBody"
+                $ref: "#/components/schemas/APIResponseError"
 components:
   schemas:
-    APIResponseBody:
+    UUID4: 
+      type: "string"
+      format: "uuidv4"
+      description: "The uuid of the request which lead to this response. May be used for log correlation."
+
+    APIResponseSuccess:
       type: "object"
-      nullable: true
-      description: "The response to the getCertificate request. Error will be `null` if statusCode is `200`. Certificate will be `null` if statusCode is `500`"
+      description: "The response to the getCertificate request. Error will be `null`."
       properties:
         requestUuid:
-          type: "string"
-          format: "uuidv4"
-          description: "The uuid of the request which lead to this response. May be used for log correlation."
-        error:
-          $ref: "#/components/schemas/APIResponseError"
+          $ref: "#/components/schemas/UUID4"
         certificate:
           type: "string"
           format: "byte"
-          description: "The pem formatted certificate of the domain provided or `null` if an error occured."
-  
-    APIResponseError: 
+          description: "The pem formatted certificate of the domain provided"
+        error:
+          nullable: true
+          type: object
+
+    APIResponseError:
       type: "object"
-      nullable: true
-      description: "The error that occured during the API-call or `null` if no error occured."
+      description: "The response to the getCertificate request when an error occurred. Certificate will be `null`"
       properties:
-        code:
-          $ref: "#/components/schemas/ErrorCode"
-        publicMessage:
-          type: "string"
-          description: "A short description of the error."
-  
+        requestUuid:
+          $ref: "#/components/schemas/UUID4"
+        error:
+          type: "object"
+          description: "The error that occurred during the API-call or `null` if no error occurred."
+          properties:
+            code:
+              $ref: "#/components/schemas/ErrorCode"
+            publicMessage:
+              type: "string"
+              description: "A short description of the error."
+        certificate:
+          nullable: true
+          type: object
+
     ErrorCode:
       type: integer
       enum:
@@ -77,11 +88,11 @@ components:
         - 504
         - 505
       description: >
-        The code of the error which occured.
+        The code of the error which occurred.
         Error:
-         * `500` - An internal server error occured.
+         * `500` - An internal server error occurred.
          * `501` - The host refused to open a connection.
-         * `502` - Server responded with unsupported statuscode.
+         * `502` - Server responded with unsupported status code.
          * `503` - No host could be found with the domain provided.
          * `504` - No route to host.
          * `505` - The url provided is not valid.
