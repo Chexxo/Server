@@ -32,36 +32,37 @@ In order to deploy the express variant of the server these steps have to be foll
 ## AWS Provider
 In order to deploy the server on AWS-Lambda these steps have to be followed:
 1. Download the aws folder from the latest server release.
-2. Open your `AWS Management Console`
+2. Open your `AWS Management Console`.  
 ![AWS Management Console](img/1-aws-console.jpg)
 3. Make sure you are in the correct aws-region. The region is shown in the top right corner.
-4. Open the lambda service page and click on `Create Function`.
+4. Open the lambda service page and click on `Create Function`.  
 ![Create function](img/2-create-function.jpg)
-5. Set the function name to `getCertificate` and as runtime select the latest `NodeJS` version. Afterwards click `Create Function`.
+5. Set the function name to `getCertificate` and as runtime select the latest `NodeJS` version. Afterwards click `Create Function`.  
 ![Create function](img/3-create-function.jpg)
 6. In the code-overview delete `index.js`
-7. Click on `Actions`->`Upload a .zip file` and select the previously downloaded aws folder of Chexxo.
+7. Click on `Actions`->`Upload a .zip file` and select the previously downloaded aws folder of Chexxo.  
 ![Upload ZIP](img/4-upload-zip.jpg)
-    - Afterwards your code view should contain the file `index.js` in its root.
+    - Afterwards your code view should contain the file `index.js` in its root.  
     ![Code View](img/5-code-view.jpg)
-8. The lambda function is now ready. Time to add a trigger for it. In the `configuration` tab click on `+ Add Trigger`.
+8. The lambda function is now ready. Time to add a trigger for it. In the `configuration` tab click on `+ Add Trigger`.  
 ![Add Trigger](img/6-add-trigger.jpg)
-9. Select the trigger `API Gateway`, also select `HTTP API` as the API type. For Security select `open`. Afterwards click on `Add`.
+9. Select the trigger `API Gateway`, also select `HTTP API` as the API type. For Security select `open`. Afterwards click on `Add`.  
 ![Add Trigger](img/7-add-trigger.jpg)
-10. Click on the gateway-name in order to open the gateway configuration.
+10. Click on the gateway-name in order to open the gateway configuration.  
 ![Open Gateway](img/8-open-gateway.jpg)
-11. On the left hand side of the gateway-configuration select `Routes`.
+11. On the left hand side of the gateway-configuration select `Routes`.  
 ![Select Routes](img/9-select-routes.jpg)
-12. Click on `ANY` below the `/certificate` endpoint. Afterwards click on `Edit`.
+12. Click on `ANY` below the `/certificate` endpoint. Afterwards click on `Edit`.  
 ![Select Any](img/10-select-any.jpg)
-13. Change `ANY` to `GET` and click `Save`.
-14. On the left hand side of the gateway-configuration select `Integrations`.
+13. Change `ANY` to `GET`, the path to `/certificate/{domain+}`, and click `Save`.  
+![Change Route](img/13-change-route.jpg)
+14. On the left hand side of the gateway-configuration select `Integrations`.  
 ![Select Integrations](img/11-select-integrations.jpg)
-15. Select `$default` and click on `Edit Integration`.
+15. Select `$default` and click on `Edit Integration`.  
 ![Select default](img/12-select-default.jpg)
 16. Make sure your function name is inside the `Lambda function` field and on `Save`. It is important, that you click on `Save` even if the function name was already correct.
 14. Congratulations your server is setup.
-15. Go to the settings page of your Chrome-Chexxo-Extension and fill in the setting `server` with the value of the API-Endpoint. Make sure to not include any subdirectories like `/default` into the settings value of the extension.
+15. Go to the settings page of your Chrome-Chexxo-Extension and fill in the setting `server` with the value of the API-Endpoint. Make sure to not include any subdirectories like `/default` into the settings value of the extension.  
 ![Set endpoint](img/13-set-endpoint.jpg)
 
 # FAQ
