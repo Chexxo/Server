@@ -1,6 +1,6 @@
 {
   "name": "chexxo-server",
-  "version": "0.0.1",
+  "version": "3.1.0",
   "description": "The server component for the chexxo certificate quality identification plugin.",
   "main": "index.js",
   "scripts": {
