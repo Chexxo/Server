@@ -6,7 +6,6 @@ module.exports = {
     "plugin:jest/recommended",
     "plugin:prettier/recommended",
     "prettier",
-    "prettier/@typescript-eslint",
   ],
   plugins: [
     "@typescript-eslint", 

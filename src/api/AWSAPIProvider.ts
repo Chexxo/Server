@@ -48,14 +48,10 @@ export class AWSAPIProvider implements APIProvider {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
     context: any
   ): Promise<unknown | Error> {
-    const path = event.rawPath.toLowerCase();
     const userAgent = event.headers["user-agent"];
     const requestUuid = context.awsRequestId;
+    const url = event.pathParameters.domain;
 
-    if (!path.includes("/certificate/")) {
-      throw Error();
-    }
-    const url = path.replace("/certificate/", "");
     const response = await this.fetchResponse(requestUuid, url, userAgent);
     return {
       cookies: [],

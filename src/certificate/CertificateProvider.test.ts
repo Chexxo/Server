@@ -19,59 +19,51 @@ afterEach(() => {
 });
 
 test("No host", () => {
-  return certificateProvider
-    .fetchCertificateByUrl("no.host.example.com")
-    .catch((data: NoHostError) => expect(data).toBeInstanceOf(NoHostError));
+  return expect(
+    certificateProvider.fetchCertificateByUrl("no.host.example.com")
+  ).rejects.toBeInstanceOf(NoHostError);
 });
 
 test("Host refused", () => {
-  return certificateProvider
-    .fetchCertificateByUrl("connection.refused.example.com")
-    .catch((data: ConnectionRefusedError) =>
-      expect(data).toBeInstanceOf(ConnectionRefusedError)
-    );
+  return expect(
+    certificateProvider.fetchCertificateByUrl("connection.refused.example.com")
+  ).rejects.toBeInstanceOf(ConnectionRefusedError);
 });
 
 test("Unexpected request error", () => {
-  return certificateProvider
-    .fetchCertificateByUrl("unexpected.error.example.com")
-    .catch((data: ServerError) => expect(data).toBeInstanceOf(ServerError));
+  return expect(
+    certificateProvider.fetchCertificateByUrl("unexpected.error.example.com")
+  ).rejects.toBeInstanceOf(ServerError);
 });
 
 test("Invalid response code", () => {
-  return certificateProvider
-    .fetchCertificateByUrl("invalid.response.example.com")
-    .catch((data: InvalidResponseError) =>
-      expect(data).toBeInstanceOf(InvalidResponseError)
-    );
+  return expect(
+    certificateProvider.fetchCertificateByUrl("invalid.response.example.com")
+  ).rejects.toBeInstanceOf(InvalidResponseError);
 });
 
 test("Valid redirect", () => {
-  return certificateProvider
-    .fetchCertificateByUrl("valid.redirect.example.com")
-    .then((data: RawCertificate) =>
-      expect(data).toBeInstanceOf(RawCertificate)
-    );
+  return expect(
+    certificateProvider.fetchCertificateByUrl("valid.redirect.example.com")
+  ).resolves.toBeInstanceOf(RawCertificate);
 });
 
 test("Invalid redirect", () => {
-  return certificateProvider
-    .fetchCertificateByUrl("invalid.redirect.example.com")
-    .catch((data: InvalidResponseError) =>
-      expect(data).toBeInstanceOf(InvalidResponseError)
-    );
+  return expect(
+    certificateProvider.fetchCertificateByUrl("invalid.redirect.example.com")
+  ).rejects.toBeInstanceOf(InvalidResponseError);
 });
 
 test("Unexpected response error", () => {
-  return certificateProvider
-    .fetchCertificateByUrl("error.response.example.com")
-    .catch((data: ServerError) => expect(data).toBeInstanceOf(ServerError));
+  return expect(
+    certificateProvider.fetchCertificateByUrl("error.response.example.com")
+  ).rejects.toBeInstanceOf(ServerError);
 });
 
 test("Invalid url error", () => {
-  return certificateProvider
-    .fetchCertificateByUrl("com")
-    .catch((data: ServerError) => expect(data).toBeInstanceOf(InvalidUrlError));
+  return expect(
+    certificateProvider.fetchCertificateByUrl("com")
+  ).rejects.toBeInstanceOf(InvalidUrlError);
 });
 
 test("user-agent proxy", () => {
