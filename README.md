@@ -58,9 +58,9 @@ In order to deploy the server on AWS-Lambda these steps have to be followed:
 ![Change Route](img/13-change-route.jpg)
 14. On the left hand side of the gateway-configuration select `Integrations`.  
 ![Select Integrations](img/11-select-integrations.jpg)
-16. Make sure your function name is inside the `Lambda function` field.
-14. Congratulations your server is setup.
-15. Go to the settings page of your Chrome-Chexxo-Extension and fill in the setting `server` with the value of the API-Endpoint. Make sure to not include any subdirectories like `/default` into the settings value of the extension.  
+15. Make sure your function name is inside the `Lambda function` field.
+16. Congratulations your server is setup.
+17. Go to the settings page of your Chrome-Chexxo-Extension and fill in the setting `server` with the value of the API-Endpoint. Make sure to not include any subdirectories like `/default` into the settings value of the extension.  
 ![Set endpoint](img/13-set-endpoint.jpg)
 
 # FAQ
